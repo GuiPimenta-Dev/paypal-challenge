@@ -7,6 +7,7 @@ interface Input {
   email: string;
   password: string;
   cpf: string;
+  category: UserCategory;
 }
 
 export class CreateUser {
@@ -15,7 +16,7 @@ export class CreateUser {
   async execute(input: Input): Promise<void> {
     if (await this.userRepository.cpfExists(input.cpf)) throw new Error("CPF already exists");
     if (await this.userRepository.emailExists(input.email)) throw new Error("Email already exists");
-    const user = new User({ ...input, category: UserCategory.USER });
+    const user = new User(input);
     await this.userRepository.create(user);
   }
 }

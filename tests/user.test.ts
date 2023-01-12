@@ -1,10 +1,17 @@
 import { CreateUser } from "../src/usecases/create-user";
 import { InMemoryUserRepository } from "../src/infra/repository/user-repository";
+import { UserCategory } from "../src/domain/entities/user";
 
 it("should be able to create a new user on database", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = { name: "John Doe", email: "john_doe@gmail.com", password: "123456", cpf: "12345678910" };
+  const input = {
+    name: "John Doe",
+    email: "john_doe@gmail.com",
+    password: "123456",
+    cpf: "12345678910",
+    category: "user" as UserCategory,
+  };
 
   await usecase.execute(input);
 
@@ -20,7 +27,13 @@ it("should be able to create a new user on database", async () => {
 it("should not be able to create a new user with an existing CPF", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = { name: "John Doe", email: "john_doe@gmail.com", password: "123456", cpf: "12345678910" };
+  const input = {
+    name: "John Doe",
+    email: "john_doe@gmail.com",
+    password: "123456",
+    cpf: "12345678910",
+    category: "user" as UserCategory,
+  };
   await usecase.execute(input);
 
   await expect(usecase.execute(input)).rejects.toThrow("CPF already exists");
@@ -29,7 +42,13 @@ it("should not be able to create a new user with an existing CPF", async () => {
 it("should not be able to create a new user with an existing email", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = { name: "John Doe", email: "john_doe@gmail.com", password: "123456", cpf: "12345678910" };
+  const input = {
+    name: "John Doe",
+    email: "john_doe@gmail.com",
+    password: "123456",
+    cpf: "12345678910",
+    category: "user" as UserCategory,
+  };
   await usecase.execute(input);
   input.cpf = "09876543210";
 
