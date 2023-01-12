@@ -7,6 +7,5 @@
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
   "coverageDirectory": "coverage",
   "collectCoverageFrom": ["src/**/*.{ts,js}", "!src/**/*.d.ts", "!src/Server.ts", "!src/infra/**/*.ts"],
-  "testTimeout": 20000,
-  "setupFiles": ["<rootDir>/setEnvVars.js"]
+  "testTimeout": 20000
 }
