@@ -14,6 +14,7 @@ it("should be able to create a new user on database", async () => {
   expect(user.email).toBe("john_doe@gmail.com");
   expect(user.password).toBe("123456");
   expect(user.cpf).toBe("12345678910");
+  expect(user.category).toBe("user");
 });
 
 it("should not be able to create a new user with an existing CPF", async () => {

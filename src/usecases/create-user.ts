@@ -1,4 +1,5 @@
-import { User } from "../domain/entities/user";
+import { User, UserCategory } from "../domain/entities/user";
+
 import { UserRepository } from "../application/ports/repository/user-repository";
 
 interface Input {
@@ -14,7 +15,7 @@ export class CreateUser {
   async execute(input: Input): Promise<void> {
     if (await this.userRepository.cpfExists(input.cpf)) throw new Error("CPF already exists");
     if (await this.userRepository.emailExists(input.email)) throw new Error("Email already exists");
-    const user = new User(input);
+    const user = new User({ ...input, category: UserCategory.USER });
     await this.userRepository.create(user);
   }
 }
