@@ -1,0 +1,37 @@
+{
+  "name": "godmode",
+  "version": "1.0.0",
+  "description": "music app",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll --runInBand",
+    "coverage": "npx jest --coverage --runInBand",
+    "start": "nodemon",
+    "debug": "tsnd --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.{ts,js}\"",
+    "build": "tsc"
+  },
+  "author": "Guilherme Alves Pimenta",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.2.5",
+    "jest": "^29.3.1",
+    "prettier": "^2.8.2",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^27.1.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "ts-jest": "^29.0.4",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.4"
+  }
+}

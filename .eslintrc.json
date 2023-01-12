@@ -1,0 +1,43 @@
+{
+  "env": {
+    "commonjs": true,
+    "jest/globals": true
+  },
+  "extends": ["airbnb-base", "prettier", "plugin:jest/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "max-classes-per-file": ["error", 2],
+    "prettier/prettier": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".json", ".ts"]
+      }
+    }
+  },
+  "plugins": ["prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "plugins": ["@typescript-eslint"],
+      "extends": ["plugin:@typescript-eslint/recommended", "airbnb-typescript/base"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "@typescript-eslint/lines-between-class-members": "off",
+        "class-methods-use-this": "off",
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/indent": "off",
+        "import/prefer-default-export": "off",
+        "@typescript-eslint/quotes": "off"
+      }
+    }
+  ]
+}
