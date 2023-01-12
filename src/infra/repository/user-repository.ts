@@ -4,6 +4,14 @@ import { UserRepository } from "../../application/ports/repository/user-reposito
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
 
+  async cpfExists(cpf: string): Promise<boolean> {
+    return this.users.some((user) => user.cpf === cpf);
+  }
+
+  async emailExists(email: string): Promise<boolean> {
+    return this.users.some((user) => user.email === email);
+  }
+
   async findByCPF(cpf: string): Promise<User | undefined> {
     return this.users.find((user) => user.cpf === cpf);
   }

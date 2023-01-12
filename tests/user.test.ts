@@ -24,3 +24,13 @@ it("should not be able to create a new user with an existing CPF", async () => {
 
   await expect(usecase.execute(input)).rejects.toThrow("CPF already exists");
 });
+
+it("should not be able to create a new user with an existing email", async () => {
+  const userRepository = new InMemoryUserRepository();
+  const usecase = new CreateUser(userRepository);
+  const input = { name: "John Doe", email: "john_doe@gmail.com", password: "123456", cpf: "12345678910" };
+  await usecase.execute(input);
+  input.cpf = "09876543210";
+
+  await expect(usecase.execute(input)).rejects.toThrow("Email already exists");
+});
