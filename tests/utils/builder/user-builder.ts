@@ -9,18 +9,18 @@ export class UserBuilder {
     return new UserBuilder();
   }
 
-  withEmail(email: string) {
-    this.email = email;
+  withAnotherEmail() {
+    this.email = "another_john_doe@gmail.com";
     return this;
   }
 
-  withCPF(cpf: string) {
-    this.cpf = cpf;
+  withAnotherCPF() {
+    this.cpf = "01234567891";
     return this;
   }
 
-  withCategory(category: UserCategory) {
-    this.category = category;
+  asShopkeeper() {
+    this.category = UserCategory.SHOPKEEPER;
     return this;
   }
 
