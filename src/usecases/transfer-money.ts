@@ -1,5 +1,6 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
+import { ExternalAuthorizer } from "../application/ports/providers/external-authorizer";
 import { TransactionsRepository } from "../application/ports/repository/transactions-repository";
 import { UserCategory } from "../domain/entities/user";
 import { UserRepository } from "../application/ports/repository/user-repository";
@@ -11,12 +12,17 @@ interface Input {
 }
 
 export class TransferMoney {
-  constructor(private userRepository: UserRepository, private transactionsRepository: TransactionsRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private transactionsRepository: TransactionsRepository,
+    private externalAuthorizer: ExternalAuthorizer,
+  ) {}
 
   async execute(input: Input): Promise<{ transactionId: string }> {
     await this.validatePayer(input.payerId);
     await this.validatePayee(input.payeeId);
     await this.validateBalance(input.payerId, input.value);
+    await this.validateExternalAuthorizer();
     const transaction = new Transaction({ ...input, type: TransactionType.TRANSFER });
     await this.transactionsRepository.create(transaction);
     return { transactionId: transaction.id };
@@ -36,5 +42,10 @@ export class TransferMoney {
   private async validateBalance(payerId: string, value: number): Promise<void> {
     const balance = await this.transactionsRepository.calculateBalance(payerId);
     if (balance < value) throw new Error("Insufficient funds");
+  }
+
+  private async validateExternalAuthorizer(): Promise<void> {
+    const isAuthorized = await this.externalAuthorizer.isAuthorized();
+    if (!isAuthorized) throw new Error("Transaction not authorized");
   }
 }
