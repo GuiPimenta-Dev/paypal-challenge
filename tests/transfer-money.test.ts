@@ -3,6 +3,7 @@ import { Transaction, TransactionType } from "../src/domain/entities/transaction
 import { ExternalAuthorizerStub } from "./utils/mocks/authorizer-stub";
 import { InMemoryTransactionsRepository } from "../src/infra/repository/in-memory/transaction-repository";
 import { InMemoryUserRepository } from "../src/infra/repository/in-memory/user-repository";
+import { TransactionBuilder } from "./utils/builder/transaction-builder";
 import { TransferMoney } from "../src/usecases/transfer-money";
 import { UserBuilder } from "./utils/builder/user-builder";
 
@@ -21,7 +22,7 @@ it("should be able to transfer money to another user", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
 
   const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer });
@@ -39,7 +40,7 @@ it("should not be able to transfer money to another user if payer does not have 
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
 
   const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer });
@@ -49,10 +50,10 @@ it("should not be able to transfer money to another user if payer does not have 
 
 it("should not be able to transfer money if you are a shopkeeper", async () => {
   const payer = UserBuilder.aShopkeeper().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
+  const payee = UserBuilder.anUser().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
 
   const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer });
@@ -65,7 +66,7 @@ it("should make the transfer only if the external authorizer allows it", async (
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
   externalAuthorizer.mockResponse(true);
 
@@ -84,7 +85,7 @@ it("should not make the transfer if the external authorizer does not allow it", 
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
   externalAuthorizer.mockResponse(false);
 
