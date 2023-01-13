@@ -1,5 +1,5 @@
 import { EmailProvider } from "../../ports/providers/email-provider";
-import { Handler } from "./implements/Handler";
+import { Handler } from "./implements/handler";
 import { TransferMade } from "../../domain/events/transfer-made";
 
 export class TransferMadeHandler implements Handler {

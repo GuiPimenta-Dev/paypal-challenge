@@ -1,6 +1,6 @@
 import Broker from "../../ports/broker/broker";
-import { DomainEvent } from "../../domain/events/implements/DomainEvent";
-import { Handler } from "../../application/handlers/implements/Handler";
+import { DomainEvent } from "../../domain/events/implements/domain-event";
+import { Handler } from "../../application/handlers/implements/handler";
 
 export class InMemoryBroker implements Broker {
   handlers: Handler[];
