@@ -1,5 +1,5 @@
 import { CreateUser } from "../src/usecases/create-user";
-import { InMemoryUserRepository } from "../src/infra/repository/user-repository";
+import { InMemoryUserRepository } from "../src/infra/repository/in-memory-user-repository";
 import { UserBuilder } from "./utils/builder/user-builder";
 
 it("should be able to create a new user on database", async () => {
