@@ -1,4 +1,4 @@
-import { UserCategory } from "../../../src/domain/entities/user";
+import { User, UserCategory } from "../../../src/domain/entities/user";
 
 export class UserBuilder {
   email = "john_doe@gmail.com";
@@ -25,12 +25,12 @@ export class UserBuilder {
   }
 
   build() {
-    return {
+    return new User({
       name: "John Doe",
       password: "123456",
       email: this.email,
       cpf: this.cpf,
       category: this.category,
-    };
+    });
   }
 }
