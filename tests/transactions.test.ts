@@ -54,3 +54,18 @@ it("should not be able to transfer money to another user if payer does not have 
   const input = { value: 140, payerId: payer.id, payeeId: payee.id };
   await expect(sut.execute(input)).rejects.toThrow("Insufficient funds");
 });
+
+it("should not be able to transfer money if you are a shopkeeper", async () => {
+  const userRepository = new InMemoryUserRepository();
+  const payer = UserBuilder.aUser().asShopkeeper().build();
+  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  await userRepository.create(payer);
+  await userRepository.create(payee);
+  const transactionsRepository = new InMemoryTransactionsRepository();
+  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
+  await transactionsRepository.create(transaction);
+
+  const sut = new TransferMoney(userRepository, transactionsRepository);
+  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  await expect(sut.execute(input)).rejects.toThrow("Shopkeepers cannot transfer money");
+});
