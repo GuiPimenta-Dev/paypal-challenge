@@ -3,10 +3,18 @@ import { User, UserCategory } from "../../../src/domain/entities/user";
 export class UserBuilder {
   email = "john_doe@gmail.com";
   cpf = "12345678910";
-  category: UserCategory = UserCategory.USER;
+  category: UserCategory;
 
-  static aUser() {
-    return new UserBuilder();
+  static anUser() {
+    const user = new UserBuilder();
+    user.category = UserCategory.USER;
+    return user;
+  }
+
+  static aShopkeeper() {
+    const shopkeeper = new UserBuilder();
+    shopkeeper.category = UserCategory.SHOPKEEPER;
+    return shopkeeper;
   }
 
   withAnotherEmail() {
@@ -16,11 +24,6 @@ export class UserBuilder {
 
   withAnotherCPF() {
     this.cpf = "01234567891";
-    return this;
-  }
-
-  asShopkeeper() {
-    this.category = UserCategory.SHOPKEEPER;
     return this;
   }
 

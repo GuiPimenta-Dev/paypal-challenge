@@ -10,8 +10,8 @@ const externalAuthorizer = new ExternalAuthorizerStub();
 
 it("should be able to transfer money to another user", async () => {
   const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  const payer = UserBuilder.anUser().build();
+  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
@@ -30,8 +30,8 @@ it("should be able to transfer money to another user", async () => {
 
 it("should not be able to transfer money to another user if payer does not have enough balance", async () => {
   const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  const payer = UserBuilder.anUser().build();
+  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
@@ -45,8 +45,8 @@ it("should not be able to transfer money to another user if payer does not have 
 
 it("should not be able to transfer money if you are a shopkeeper", async () => {
   const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().asShopkeeper().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  const payer = UserBuilder.aShopkeeper().build();
+  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
@@ -60,8 +60,8 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
 
 it("should make the transfer only if the external authorizer allows it", async () => {
   const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  const payer = UserBuilder.anUser().build();
+  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
@@ -81,8 +81,8 @@ it("should make the transfer only if the external authorizer allows it", async (
 
 it("should not make the transfer if the external authorizer does not allow it", async () => {
   const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
+  const payer = UserBuilder.anUser().build();
+  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
