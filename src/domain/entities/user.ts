@@ -5,6 +5,14 @@ export enum UserCategory {
   SHOPKEEPER = "shopkeeper",
 }
 
+interface Input {
+  name: string;
+  email: string;
+  password: string;
+  cpf: string;
+  category: UserCategory;
+}
+
 export class User {
   public readonly id: string;
   public readonly category: UserCategory;
@@ -13,10 +21,11 @@ export class User {
   public readonly password: string;
   public readonly cpf: string;
 
-  constructor(props: Omit<User, "id">, id?: string) {
+  private constructor(props: Input & { id: string }) {
     Object.assign(this, props);
-    if (!id) {
-      this.id = uuid();
-    }
+  }
+
+  static create(input: Input): User {
+    return new User({ id: uuid(), ...input });
   }
 }

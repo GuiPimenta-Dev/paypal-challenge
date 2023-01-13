@@ -38,7 +38,8 @@ export class TransferMoney {
     const payee = await this.validatePayee(input.payeeId);
     await this.validateBalance(input.payerId, input.value);
     await this.validateExternalAuthorizer();
-    const transaction = new Transaction({ ...input, type: TransactionType.TRANSFER });
+    const transfer = { ...input, type: TransactionType.TRANSFER };
+    const transaction = Transaction.create(transfer);
     await this.transactionsRepository.create(transaction);
     await this.broker.publish(new TransferMade({ email: payee.email, value: input.value }));
     return { transactionId: transaction.id };

@@ -5,6 +5,13 @@ export enum TransactionType {
   DEPOSIT = "deposit",
 }
 
+interface Input {
+  payerId?: string;
+  payeeId: string;
+  value: number;
+  type: TransactionType;
+}
+
 export class Transaction {
   public readonly id: string;
   public readonly payerId?: string;
@@ -12,10 +19,11 @@ export class Transaction {
   public readonly value: number;
   public readonly type: TransactionType;
 
-  constructor(props: Omit<Transaction, "id">, id?: string) {
+  constructor(props: Input & { id: string }) {
     Object.assign(this, props);
-    if (!id) {
-      this.id = uuid();
-    }
+  }
+
+  static create(input: Input): Transaction {
+    return new Transaction({ id: uuid(), ...input });
   }
 }

@@ -16,10 +16,6 @@ export class TransactionBuilder {
   }
 
   build() {
-    return new Transaction({
-      type: this.type,
-      payeeId: this.payeeId,
-      value: 100,
-    });
+    return Transaction.create({ type: this.type, payeeId: this.payeeId, value: 100 });
   }
 }

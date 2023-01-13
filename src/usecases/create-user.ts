@@ -16,7 +16,7 @@ export class CreateUser {
   async execute(input: Input): Promise<{ userId: string }> {
     if (await this.userRepository.cpfAlreadyExists(input.cpf)) throw new Error("CPF already exists");
     if (await this.userRepository.emailAlreadyExists(input.email)) throw new Error("Email already exists");
-    const user = new User(input);
+    const user = User.create(input);
     await this.userRepository.create(user);
     return { userId: user.id };
   }

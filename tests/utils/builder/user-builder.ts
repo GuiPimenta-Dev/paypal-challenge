@@ -28,7 +28,7 @@ export class UserBuilder {
   }
 
   build() {
-    return new User({
+    return User.create({
       name: "John Doe",
       password: "123456",
       email: this.email,
