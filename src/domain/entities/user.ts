@@ -8,10 +8,10 @@ export enum UserCategory {
 export class User {
   public readonly id: string;
   public readonly category: UserCategory;
-  public name: string;
-  public email: string;
-  public password: string;
-  public cpf: string;
+  public readonly name: string;
+  public readonly email: string;
+  public readonly password: string;
+  public readonly cpf: string;
 
   constructor(props: Omit<User, "id">, id?: string) {
     Object.assign(this, props);
