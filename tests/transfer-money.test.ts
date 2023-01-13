@@ -1,10 +1,10 @@
 import { EmailSpy } from "./utils/mocks/email-spy";
 import { ExternalAuthorizerStub } from "./utils/mocks/authorizer-stub";
-import InMemoryBroker from "../src/infra/broker/in-memory-broker";
+import { InMemoryBroker } from "../src/infra/broker/in-memory-broker";
 import { InMemoryTransactionsRepository } from "../src/infra/repository/in-memory/transaction-repository";
 import { InMemoryUserRepository } from "../src/infra/repository/in-memory/user-repository";
 import { TransactionBuilder } from "./utils/builder/transaction-builder";
-import TransferMadeHandler from "../src/application/handlers/transfer-made-handler";
+import { TransferMadeHandler } from "../src/application/handlers/transfer-made-handler";
 import { TransferMoney } from "../src/usecases/transfer-money";
 import { UserBuilder } from "./utils/builder/user-builder";
 

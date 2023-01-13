@@ -9,7 +9,6 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "coverage": "npx jest --coverage --runInBand",
     "start": "nodemon",
     "debug": "tsnd --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.{ts,js}\"",

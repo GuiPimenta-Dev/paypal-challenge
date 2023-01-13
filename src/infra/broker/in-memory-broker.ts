@@ -2,7 +2,7 @@ import Broker from "../../application/ports/broker/broker";
 import { DomainEvent } from "../../domain/events/implements/DomainEvent";
 import { Handler } from "../../application/handlers/implements/Handler";
 
-export default class InMemoryBroker implements Broker {
+export class InMemoryBroker implements Broker {
   handlers: Handler[];
 
   constructor() {
