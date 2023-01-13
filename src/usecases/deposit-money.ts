@@ -1,7 +1,7 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
-import { TransactionsRepository } from "../application/ports/repository/transactions-repositorys-repository";
-import { UserRepository } from "../application/ports/repository/user-repositoryr-repository";
+import { TransactionsRepository } from "../ports/repository/transactions-repositorys-repository";
+import { UserRepository } from "../ports/repository/user-repositoryr-repository";
 
 interface Dependencies {
   userRepository: UserRepository;

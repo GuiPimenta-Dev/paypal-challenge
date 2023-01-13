@@ -1,4 +1,4 @@
-import { EmailProvider } from "../ports/providers/email-provider";
+import { EmailProvider } from "../../ports/providers/email-provider";
 import { Handler } from "./implements/Handler";
 import { TransferMade } from "../../domain/events/transfer-made";
 

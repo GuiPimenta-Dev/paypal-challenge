@@ -1,4 +1,4 @@
-import Broker from "../../application/ports/broker/broker";
+import Broker from "../../ports/broker/broker";
 import { DomainEvent } from "../../domain/events/implements/DomainEvent";
 import { Handler } from "../../application/handlers/implements/Handler";
 

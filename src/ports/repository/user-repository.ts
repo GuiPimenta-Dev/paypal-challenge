@@ -1,4 +1,4 @@
-import { User } from "../../../domain/entities/user";
+import { User } from "../../domain/entities/user";
 
 export interface UserRepository {
   cpfAlreadyExists(cpf: string): Promise<boolean>;

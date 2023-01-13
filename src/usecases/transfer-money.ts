@@ -1,11 +1,11 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 import { User, UserCategory } from "../domain/entities/user";
 
-import Broker from "../application/ports/broker/broker";
-import { ExternalAuthorizer } from "../application/ports/providers/external-authorizer";
-import { TransactionsRepository } from "../application/ports/repository/transactions-repository";
+import Broker from "../ports/broker/broker";
+import { ExternalAuthorizer } from "../ports/providers/external-authorizer";
+import { TransactionsRepository } from "../ports/repository/transactions-repository";
 import { TransferMade } from "../domain/events/transfer-made";
-import { UserRepository } from "../application/ports/repository/user-repository";
+import { UserRepository } from "../ports/repository/user-repository";
 
 interface Dependencies {
   userRepository: UserRepository;
