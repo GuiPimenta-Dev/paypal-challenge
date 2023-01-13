@@ -1,9 +1,9 @@
 import { CreateUser } from "../src/usecases/create-user";
-import { InMemoryUserRepository } from "../src/infra/repository/in-memory/user-repository";
-import { UserBuilder } from "./utils/builder/user-builder";
+import { InMemoryUsersRepository } from "../src/infra/repositories/in-memory/users";
+import { UserBuilder } from "./utils/builder/user";
 
 it("should be able to create a new user on database", async () => {
-  const userRepository = new InMemoryUserRepository();
+  const userRepository = new InMemoryUsersRepository();
 
   const sut = new CreateUser(userRepository);
   const defaultUser = UserBuilder.anUser().build();
@@ -19,7 +19,7 @@ it("should be able to create a new user on database", async () => {
 });
 
 it("should not be able to create a new user with an existing CPF", async () => {
-  const userRepository = new InMemoryUserRepository();
+  const userRepository = new InMemoryUsersRepository();
   const user = UserBuilder.anUser().build();
   await userRepository.create(user);
 
@@ -29,7 +29,7 @@ it("should not be able to create a new user with an existing CPF", async () => {
 });
 
 it("should not be able to create a new user with an existing email", async () => {
-  const userRepository = new InMemoryUserRepository();
+  const userRepository = new InMemoryUsersRepository();
   const user = UserBuilder.anUser().build();
   await userRepository.create(user);
 

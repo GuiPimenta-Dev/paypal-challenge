@@ -1,7 +1,7 @@
 import { User } from "../../../domain/entities/user";
-import { UserRepository } from "../../../ports/repository/user-repository";
+import { UsersRepository } from "../../../ports/repositories/users";
 
-export class InMemoryUserRepository implements UserRepository {
+export class InMemoryUsersRepository implements UsersRepository {
   private users: User[] = [];
 
   async cpfAlreadyExists(cpf: string): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { Transaction } from "../../../domain/entities/transaction";
-import { TransactionsRepository } from "../../../ports/repository/transactions-repository";
+import { TransactionsRepository } from "../../../ports/repositories/transactions";
 
 export class InMemoryTransactionsRepository implements TransactionsRepository {
   private transactions: Transaction[] = [];

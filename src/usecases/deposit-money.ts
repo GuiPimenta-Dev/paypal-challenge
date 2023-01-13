@@ -1,10 +1,10 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
-import { TransactionsRepository } from "../ports/repository/transactions-repository";
-import { UserRepository } from "../ports/repository/user-repository";
+import { TransactionsRepository } from "../ports/repositories/transactions";
+import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
-  userRepository: UserRepository;
+  userRepository: UsersRepository;
   transactionsRepository: TransactionsRepository;
 }
 
@@ -14,7 +14,7 @@ interface Input {
 }
 
 export class DepositMoney {
-  private readonly userRepository: UserRepository;
+  private readonly userRepository: UsersRepository;
   private readonly transactionsRepository: TransactionsRepository;
 
   constructor(input: Dependencies) {

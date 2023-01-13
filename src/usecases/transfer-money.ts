@@ -3,12 +3,12 @@ import { User, UserCategory } from "../domain/entities/user";
 
 import Broker from "../ports/broker/broker";
 import { ExternalAuthorizer } from "../ports/providers/external-authorizer";
-import { TransactionsRepository } from "../ports/repository/transactions-repository";
+import { TransactionsRepository } from "../ports/repositories/transactions";
 import { TransferMade } from "../domain/events/transfer-made";
-import { UserRepository } from "../ports/repository/user-repository";
+import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
-  userRepository: UserRepository;
+  userRepository: UsersRepository;
   transactionsRepository: TransactionsRepository;
   externalAuthorizer: ExternalAuthorizer;
   broker: Broker;
@@ -21,7 +21,7 @@ interface Input {
 }
 
 export class TransferMoney {
-  private readonly userRepository: UserRepository;
+  private readonly userRepository: UsersRepository;
   private readonly transactionsRepository: TransactionsRepository;
   private readonly externalAuthorizer: ExternalAuthorizer;
   private readonly broker: Broker;

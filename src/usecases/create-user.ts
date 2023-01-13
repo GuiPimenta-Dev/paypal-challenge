@@ -1,6 +1,6 @@
 import { User, UserCategory } from "../domain/entities/user";
 
-import { UserRepository } from "../ports/repository/user-repository";
+import { UsersRepository } from "../ports/repositories/users";
 
 interface Input {
   name: string;
@@ -11,7 +11,7 @@ interface Input {
 }
 
 export class CreateUser {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UsersRepository) {}
 
   async execute(input: Input): Promise<{ userId: string }> {
     if (await this.userRepository.cpfAlreadyExists(input.cpf)) throw new Error("CPF already exists");
