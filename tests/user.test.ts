@@ -1,19 +1,13 @@
 import { CreateUser } from "../src/usecases/create-user";
 import { InMemoryUserRepository } from "../src/infra/repository/user-repository";
-import { UserCategory } from "../src/domain/entities/user";
+import { UserBuilder } from "./utils/builder/user-builder";
 
 it("should be able to create a new user on database", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = {
-    name: "John Doe",
-    email: "john_doe@gmail.com",
-    password: "123456",
-    cpf: "12345678910",
-    category: "user" as UserCategory,
-  };
+  const defaultUser = UserBuilder.aUser().build();
 
-  await usecase.execute(input);
+  await usecase.execute(defaultUser);
 
   const user = await userRepository.findByCPF("12345678910");
   expect(user).toHaveProperty("id");
@@ -27,30 +21,19 @@ it("should be able to create a new user on database", async () => {
 it("should not be able to create a new user with an existing CPF", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = {
-    name: "John Doe",
-    email: "john_doe@gmail.com",
-    password: "123456",
-    cpf: "12345678910",
-    category: "user" as UserCategory,
-  };
-  await usecase.execute(input);
+  const user = UserBuilder.aUser().withCPF("12345678910").build();
+  await usecase.execute(user);
 
-  await expect(usecase.execute(input)).rejects.toThrow("CPF already exists");
+  const userWithExistentCPF = UserBuilder.aUser().withCPF("12345678910").build();
+  await expect(usecase.execute(userWithExistentCPF)).rejects.toThrow("CPF already exists");
 });
 
 it("should not be able to create a new user with an existing email", async () => {
   const userRepository = new InMemoryUserRepository();
   const usecase = new CreateUser(userRepository);
-  const input = {
-    name: "John Doe",
-    email: "john_doe@gmail.com",
-    password: "123456",
-    cpf: "12345678910",
-    category: "user" as UserCategory,
-  };
-  await usecase.execute(input);
-  input.cpf = "09876543210";
+  const user = UserBuilder.aUser().withEmail("john_doe@gmail.com").build();
+  await usecase.execute(user);
 
-  await expect(usecase.execute(input)).rejects.toThrow("Email already exists");
+  const userWithExistentEmail = UserBuilder.aUser().withCPF("01234567891").withEmail("john_doe@gmail.com").build();
+  await expect(usecase.execute(userWithExistentEmail)).rejects.toThrow("Email already exists");
 });
