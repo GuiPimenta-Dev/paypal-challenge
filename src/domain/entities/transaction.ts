@@ -8,7 +8,7 @@ export enum TransactionType {
 export class Transaction {
   public readonly id: string;
   public readonly payerId?: string;
-  public readonly payeeId?: string;
+  public readonly payeeId: string;
   public readonly value: number;
   public readonly type: TransactionType;
 

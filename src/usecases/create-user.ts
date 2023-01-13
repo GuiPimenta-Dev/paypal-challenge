@@ -13,10 +13,11 @@ interface Input {
 export class CreateUser {
   constructor(private userRepository: UserRepository) {}
 
-  async execute(input: Input): Promise<void> {
+  async execute(input: Input): Promise<{ userId: string }> {
     if (await this.userRepository.cpfAlreadyExists(input.cpf)) throw new Error("CPF already exists");
     if (await this.userRepository.emailAlreadyExists(input.email)) throw new Error("Email already exists");
     const user = new User(input);
     await this.userRepository.create(user);
+    return { userId: user.id };
   }
 }
