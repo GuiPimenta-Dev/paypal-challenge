@@ -5,6 +5,12 @@ import { TransactionsRepository } from "../application/ports/repository/transact
 import { UserCategory } from "../domain/entities/user";
 import { UserRepository } from "../application/ports/repository/user-repository";
 
+interface Dependencies {
+  userRepository: UserRepository;
+  transactionsRepository: TransactionsRepository;
+  externalAuthorizer: ExternalAuthorizer;
+}
+
 interface Input {
   payerId: string;
   payeeId: string;
@@ -12,11 +18,15 @@ interface Input {
 }
 
 export class TransferMoney {
-  constructor(
-    private userRepository: UserRepository,
-    private transactionsRepository: TransactionsRepository,
-    private externalAuthorizer: ExternalAuthorizer,
-  ) {}
+  private readonly userRepository: UserRepository;
+  private readonly transactionsRepository: TransactionsRepository;
+  private readonly externalAuthorizer: ExternalAuthorizer;
+
+  constructor(input: Dependencies) {
+    this.userRepository = input.userRepository;
+    this.transactionsRepository = input.transactionsRepository;
+    this.externalAuthorizer = input.externalAuthorizer;
+  }
 
   async execute(input: Input): Promise<{ transactionId: string }> {
     await this.validatePayer(input.payerId);

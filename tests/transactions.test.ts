@@ -1,114 +1,85 @@
-import { Transaction, TransactionType } from "../src/domain/entities/transaction";
-
 import { DepositMoney } from "../src/usecases/deposit-money";
-import { ExternalAuthorizerStub } from "./utils/mocks/authorizer-stub";
-import { InMemoryTransactionsRepository } from "../src/infra/repository/in-memory/transaction-repository";
-import { InMemoryUserRepository } from "../src/infra/repository/in-memory/user-repository";
+import { TransactionsDependenciesFactory } from "./utils/factory/transactions-dependencies-factory";
 import { TransferMoney } from "../src/usecases/transfer-money";
-import { UserBuilder } from "./utils/builder/user-builder";
 
 it("should be able to deposit money", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const user = UserBuilder.aUser().build();
-  await userRepository.create(user);
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const userId = dependencyFactory.createUser();
 
-  const sut = new DepositMoney(userRepository, transactionsRepository);
-  const input = { value: 100, userId: user.id };
+  const sut = new DepositMoney(dependencyFactory.dependencies);
+  const input = { value: 100, userId };
   await sut.execute(input);
 
-  const balance = await transactionsRepository.calculateBalance(user.id);
+  const { transactionsRepository } = dependencyFactory.dependencies;
+  const balance = await transactionsRepository.calculateBalance(userId);
   expect(balance).toBe(100);
 });
 
 it("should be able to transfer money to another user", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
-  await transactionsRepository.create(transaction);
-  const externalAuthorizer = new ExternalAuthorizerStub();
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const payerId = dependencyFactory.createUser();
+  const payeeId = dependencyFactory.createPayee();
+  dependencyFactory.makeDeposit(payerId, 100);
 
-  const sut = new TransferMoney(userRepository, transactionsRepository, externalAuthorizer);
-  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney(dependencyFactory.dependencies);
+  const input = { value: 40, payerId, payeeId };
   await sut.execute(input);
 
-  const payerBalance = await transactionsRepository.calculateBalance(payer.id);
-  const payeeBalance = await transactionsRepository.calculateBalance(payee.id);
+  const { transactionsRepository } = dependencyFactory.dependencies;
+  const payerBalance = await transactionsRepository.calculateBalance(payerId);
+  const payeeBalance = await transactionsRepository.calculateBalance(payeeId);
   expect(payerBalance).toBe(60);
   expect(payeeBalance).toBe(40);
 });
 
 it("should not be able to transfer money to another user if payer does not have enough balance", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
-  await transactionsRepository.create(transaction);
-  const externalAuthorizer = new ExternalAuthorizerStub();
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const payerId = dependencyFactory.createUser();
+  const payeeId = dependencyFactory.createPayee();
+  dependencyFactory.makeDeposit(payerId, 100);
 
-  const sut = new TransferMoney(userRepository, transactionsRepository, externalAuthorizer);
-  const input = { value: 140, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney(dependencyFactory.dependencies);
+  const input = { value: 140, payerId, payeeId };
   await expect(sut.execute(input)).rejects.toThrow("Insufficient funds");
 });
 
 it("should not be able to transfer money if you are a shopkeeper", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().asShopkeeper().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
-  await transactionsRepository.create(transaction);
-  const externalAuthorizer = new ExternalAuthorizerStub();
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const payerId = dependencyFactory.createShopkeeper();
+  const payeeId = dependencyFactory.createPayee();
+  dependencyFactory.makeDeposit(payerId, 100);
 
-  const sut = new TransferMoney(userRepository, transactionsRepository, externalAuthorizer);
-  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney(dependencyFactory.dependencies);
+  const input = { value: 40, payerId, payeeId };
   await expect(sut.execute(input)).rejects.toThrow("Shopkeepers cannot transfer money");
 });
 
 it("should make the transfer only if the external authorizer allows it", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
-  await transactionsRepository.create(transaction);
-  const externalAuthorizer = new ExternalAuthorizerStub();
-  externalAuthorizer.mockResponse(true);
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const payerId = dependencyFactory.createUser();
+  const payeeId = dependencyFactory.createPayee();
+  dependencyFactory.makeDeposit(payerId, 100);
+  dependencyFactory.mockAuthorizerResponse(true);
 
-  const sut = new TransferMoney(userRepository, transactionsRepository, externalAuthorizer);
-  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney(dependencyFactory.dependencies);
+  const input = { value: 40, payerId, payeeId };
   await sut.execute(input);
 
-  const payerBalance = await transactionsRepository.calculateBalance(payer.id);
-  const payeeBalance = await transactionsRepository.calculateBalance(payee.id);
+  const { transactionsRepository } = dependencyFactory.dependencies;
+  const payerBalance = await transactionsRepository.calculateBalance(payerId);
+  const payeeBalance = await transactionsRepository.calculateBalance(payeeId);
   expect(payerBalance).toBe(60);
   expect(payeeBalance).toBe(40);
 });
 
 it("should not make the transfer if the external authorizer does not allow it", async () => {
-  const userRepository = new InMemoryUserRepository();
-  const payer = UserBuilder.aUser().build();
-  const payee = UserBuilder.aUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transactionsRepository = new InMemoryTransactionsRepository();
-  const transaction = new Transaction({ value: 100, payeeId: payer.id, type: TransactionType.DEPOSIT });
-  await transactionsRepository.create(transaction);
-  const externalAuthorizer = new ExternalAuthorizerStub();
-  externalAuthorizer.mockResponse(false);
+  const dependencyFactory = new TransactionsDependenciesFactory();
+  const payerId = dependencyFactory.createUser();
+  const payeeId = dependencyFactory.createPayee();
+  dependencyFactory.makeDeposit(payerId, 100);
+  dependencyFactory.mockAuthorizerResponse(false);
 
-  const sut = new TransferMoney(userRepository, transactionsRepository, externalAuthorizer);
-  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney(dependencyFactory.dependencies);
+  const input = { value: 40, payerId, payeeId };
   await expect(sut.execute(input)).rejects.toThrow("Transaction not authorized");
 });
