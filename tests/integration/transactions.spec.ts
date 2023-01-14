@@ -1,4 +1,5 @@
-import { AuthorizerStub } from "../utils/mocks/authorizer-stub";
+import { AuthorizerAdapter } from "../../src/infra/providers/authorizer-adapter";
+import AxiosAdapter from "../../src/infra/http/axios-adapter";
 import { InMemoryBroker } from "../../src/infra/broker/in-memory";
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
@@ -11,7 +12,7 @@ import request from "supertest";
 beforeEach(async () => {
   config.usersRepository = new InMemoryUsersRepository();
   config.transactionsRepository = new InMemoryTransactionsRepository();
-  config.authorizer = new AuthorizerStub();
+  config.authorizer = new AuthorizerAdapter(new AxiosAdapter());
   config.broker = new InMemoryBroker();
 });
 
@@ -20,8 +21,8 @@ it("should be able to make a transfer", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await config.usersRepository.create(payer);
   await config.usersRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
-  await config.transactionsRepository.create(transaction);
+  const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
+  await config.transactionsRepository.create(deposit);
 
   const response = await request(app)
     .post("/transactions/transfer")

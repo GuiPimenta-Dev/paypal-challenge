@@ -18,7 +18,6 @@ export class ExpressAdapter {
         if (e instanceof HttpError) {
           return res.status(e.statusCode).json({ message: e.message });
         }
-        console.log(e.message);
         res.status(500).json({ message: e.message });
       }
     };

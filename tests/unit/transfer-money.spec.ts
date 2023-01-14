@@ -25,8 +25,8 @@ it("should be able to transfer money to another user", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
-  await transactionsRepository.create(transaction);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
+  await transactionsRepository.create(deposit);
 
   const sut = new TransferMoney({ usersRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
@@ -54,8 +54,8 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
   const payee = UserBuilder.anUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
-  await transactionsRepository.create(transaction);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
+  await transactionsRepository.create(deposit);
 
   const sut = new TransferMoney({ usersRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
@@ -67,8 +67,8 @@ it("should not make the transfer if the external authorizer does not allow it", 
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
-  await transactionsRepository.create(transaction);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
+  await transactionsRepository.create(deposit);
   authorizer.mockResponse(false);
 
   const sut = new TransferMoney({ usersRepository, transactionsRepository, authorizer, broker });
@@ -81,11 +81,11 @@ it("should send an email to the payee when the transfer is made", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
-  await transactionsRepository.create(transaction);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
+  await transactionsRepository.create(deposit);
   const emailSpy = new EmailSpy();
-  const transferMadeHandler = new TransferMadeHandler(emailSpy);
-  broker.register(transferMadeHandler);
+  const handler = new TransferMadeHandler(emailSpy);
+  broker.register(handler);
 
   const sut = new TransferMoney({ usersRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
