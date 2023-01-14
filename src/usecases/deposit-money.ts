@@ -1,10 +1,11 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
+import { NotFound } from "../utils/http/NotFound";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
-  userRepository: UsersRepository;
+  usersRepository: UsersRepository;
   transactionsRepository: TransactionsRepository;
 }
 
@@ -14,7 +15,7 @@ interface Input {
 }
 
 export class DepositMoney {
-  private readonly userRepository: UsersRepository;
+  private readonly usersRepository: UsersRepository;
   private readonly transactionsRepository: TransactionsRepository;
 
   constructor(input: Dependencies) {
@@ -22,8 +23,8 @@ export class DepositMoney {
   }
 
   async execute(input: Input): Promise<{ transactionId: string }> {
-    const user = await this.userRepository.findById(input.userId);
-    if (!user) throw new Error("User not found");
+    const user = await this.usersRepository.findById(input.userId);
+    if (!user) throw new NotFound("User not found");
     const deposit = { payeeId: input.userId, value: input.value, type: TransactionType.DEPOSIT };
     const transaction = Transaction.create(deposit);
     await this.transactionsRepository.create(transaction);

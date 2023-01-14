@@ -1,8 +1,11 @@
 import { ExpressAdapter } from "./infra/http/express-adapter";
-import { TransactionsController } from "./application/controllers/transactions";
+import { TransactionController } from "./application/controllers/transaction";
+import { UserController } from "./application/controllers/user";
 
 const app = ExpressAdapter.create();
 
-app.post("/transactions/transfer", ExpressAdapter.route(TransactionsController.transfer));
+app.post("/users", ExpressAdapter.route(UserController.create));
+app.post("/transactions/transfer", ExpressAdapter.route(TransactionController.transfer));
+app.post("/transactions/deposit", ExpressAdapter.route(TransactionController.deposit));
 
 export default app;

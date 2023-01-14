@@ -1,10 +1,12 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
-import { User, UserCategory } from "../domain/entities/user";
 
 import { AuthorizerProvider } from "../ports/providers/authorizer";
+import { BadRequest } from "../utils/http/BadRequest";
 import { Broker } from "../ports/broker/broker";
+import { NotFound } from "../utils/http/NotFound";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { TransferMade } from "../domain/events/transfer-made";
+import { UserCategory } from "../domain/entities/user";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
@@ -41,23 +43,23 @@ export class TransferMoney {
 
   private async validatePayer(payerId: string): Promise<void> {
     const payer = await this.usersRepository.findById(payerId);
-    if (!payer) throw new Error("Payer not found");
+    if (!payer) throw new NotFound("Payer not found");
     if (payer.category === UserCategory.SHOPKEEPER) throw new Error("Shopkeepers cannot transfer money");
   }
 
   private async validatePayee(payeeId: string): Promise<void> {
     const payee = await this.usersRepository.findById(payeeId);
-    if (!payee) throw new Error("Payee not found");
+    if (!payee) throw new NotFound("Payee not found");
   }
 
   private async verifyIfPayerHasEnoughBalance(payerId: string, value: number): Promise<void> {
     const balance = await this.transactionsRepository.calculateBalance(payerId);
-    if (balance < value) throw new Error("Insufficient funds");
+    if (balance < value) throw new BadRequest("Insufficient funds");
   }
 
   private async verifyIfTransactionIsAuthorized(): Promise<void> {
     const isAuthorized = await this.authorizer.isAuthorized();
-    if (!isAuthorized) throw new Error("Transaction not authorized");
+    if (!isAuthorized) throw new BadRequest("Transaction not authorized");
   }
 
   private async makeTransfer(input: Input): Promise<Transaction> {
