@@ -25,7 +25,7 @@ it("should be able to transfer money to another user", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
+  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   await transactionsRepository.create(transaction);
 
   const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
@@ -54,7 +54,7 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
   const payee = UserBuilder.anUser().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
+  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   await transactionsRepository.create(transaction);
 
   const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
@@ -67,7 +67,7 @@ it("should not make the transfer if the external authorizer does not allow it", 
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
+  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   await transactionsRepository.create(transaction);
   authorizer.mockResponse(false);
 
@@ -81,7 +81,7 @@ it("should send an email to the payee when the transfer is made", async () => {
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
+  const transaction = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   await transactionsRepository.create(transaction);
   const emailSpy = new EmailSpy();
   const transferMadeHandler = new TransferMadeHandler(emailSpy);
