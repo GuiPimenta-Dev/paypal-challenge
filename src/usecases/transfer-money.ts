@@ -32,10 +32,10 @@ export class TransferMoney {
 
   async execute(input: Input): Promise<{ transactionId: string }> {
     await this.validatePayer(input.payerId);
-    const payee = await this.validatePayee(input.payeeId);
+    await this.validatePayee(input.payeeId);
     await this.verifyIfPayerHasEnoughBalance(input.payerId, input.value);
     await this.verifyIfTransactionIsAuthorized();
-    const transaction = await this.makeTransfer(input, payee);
+    const transaction = await this.makeTransfer(input);
     return { transactionId: transaction.id };
   }
 
@@ -45,10 +45,9 @@ export class TransferMoney {
     if (payer.category === UserCategory.SHOPKEEPER) throw new Error("Shopkeepers cannot transfer money");
   }
 
-  private async validatePayee(payeeId: string): Promise<User> {
+  private async validatePayee(payeeId: string): Promise<void> {
     const payee = await this.usersRepository.findById(payeeId);
     if (!payee) throw new Error("Payee not found");
-    return payee;
   }
 
   private async verifyIfPayerHasEnoughBalance(payerId: string, value: number): Promise<void> {
@@ -61,11 +60,11 @@ export class TransferMoney {
     if (!isAuthorized) throw new Error("Transaction not authorized");
   }
 
-  private async makeTransfer(input: Input, payee: User): Promise<Transaction> {
+  private async makeTransfer(input: Input): Promise<Transaction> {
     const transfer = { ...input, type: TransactionType.TRANSFER };
     const transaction = Transaction.create(transfer);
     await this.transactionsRepository.create(transaction);
-    const event = new TransferMade({ email: payee.email, value: input.value });
+    const event = new TransferMade();
     await this.broker.publish(event);
     return transaction;
   }

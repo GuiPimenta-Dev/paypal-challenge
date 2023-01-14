@@ -3,7 +3,7 @@ import { HttpClient, HttpOutput } from "../../ports/http/http-client";
 import { HttpError } from "../../utils/http/extends/HttpError";
 import axios from "axios";
 
-export default class AxiosAdapter implements HttpClient {
+export class AxiosAdapter implements HttpClient {
   async get(url: string, query?: any, headers?: any): Promise<HttpOutput> {
     let response: any;
     try {

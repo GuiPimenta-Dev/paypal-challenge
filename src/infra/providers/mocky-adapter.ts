@@ -1,7 +1,7 @@
 import { AuthorizerProvider } from "../../ports/providers/authorizer";
 import { HttpClient } from "../../ports/http/http-client";
 
-export class AuthorizerAdapter implements AuthorizerProvider {
+export class MockyAdapter implements AuthorizerProvider {
   constructor(private httpClient: HttpClient) {}
 
   async isAuthorized(): Promise<boolean> {
