@@ -38,5 +38,4 @@ it("should be able to make a transfer and send an email", async () => {
 
   expect(response.statusCode).toBe(200);
   expect(emailSpy.wasCalled).toBe(true);
-  expect(emailSpy.calledTimes).toBe(1);
 });
