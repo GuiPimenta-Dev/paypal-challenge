@@ -36,6 +36,24 @@ it("should be able to transfer money to another user", async () => {
   expect(payeeBalance).toBe(40);
 });
 
+it("should be able to transfer money to a shopkeeper", async () => {
+  const payer = UserBuilder.anUser().build();
+  const payee = UserBuilder.aShopkeeper().build();
+  await usersRepository.create(payer);
+  await usersRepository.create(payee);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
+  await transactionsRepository.create(deposit);
+
+  const sut = new TransferMoney({ usersRepository, transactionsRepository, authorizer, broker });
+  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
+  await sut.execute(input);
+
+  const payerBalance = await transactionsRepository.calculateBalance(payer.id);
+  const payeeBalance = await transactionsRepository.calculateBalance(payee.id);
+  expect(payerBalance).toBe(60);
+  expect(payeeBalance).toBe(40);
+});
+
 it("should not be able to transfer money to another user if payer does not have enough balance", async () => {
   const payer = UserBuilder.anUser().build();
   const payee = UserBuilder.anUser().build();
