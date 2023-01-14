@@ -1,8 +1,8 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 import { User, UserCategory } from "../domain/entities/user";
 
-import Broker from "../ports/broker/broker";
-import { ExternalAuthorizer } from "../ports/providers/external-authorizer";
+import { AuthorizerProvider } from "../ports/providers/authorizer";
+import { Broker } from "../ports/broker/broker";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { TransferMade } from "../domain/events/transfer-made";
 import { UsersRepository } from "../ports/repositories/users";
@@ -10,7 +10,7 @@ import { UsersRepository } from "../ports/repositories/users";
 interface Dependencies {
   userRepository: UsersRepository;
   transactionsRepository: TransactionsRepository;
-  externalAuthorizer: ExternalAuthorizer;
+  authorizer: AuthorizerProvider;
   broker: Broker;
 }
 
@@ -23,25 +23,19 @@ interface Input {
 export class TransferMoney {
   private readonly userRepository: UsersRepository;
   private readonly transactionsRepository: TransactionsRepository;
-  private readonly externalAuthorizer: ExternalAuthorizer;
+  private readonly authorizer: AuthorizerProvider;
   private readonly broker: Broker;
 
   constructor(input: Dependencies) {
-    this.userRepository = input.userRepository;
-    this.transactionsRepository = input.transactionsRepository;
-    this.externalAuthorizer = input.externalAuthorizer;
-    this.broker = input.broker;
+    Object.assign(this, input);
   }
 
   async execute(input: Input): Promise<{ transactionId: string }> {
     await this.validatePayer(input.payerId);
     const payee = await this.validatePayee(input.payeeId);
-    await this.validateBalance(input.payerId, input.value);
-    await this.validateExternalAuthorizer();
-    const transfer = { ...input, type: TransactionType.TRANSFER };
-    const transaction = Transaction.create(transfer);
-    await this.transactionsRepository.create(transaction);
-    await this.broker.publish(new TransferMade({ email: payee.email, value: input.value }));
+    await this.verifyIfPayerHasEnoughBalance(input.payerId, input.value);
+    await this.verifyIfTransactionIsAuthorized();
+    const transaction = await this.makeTransfer(input, payee);
     return { transactionId: transaction.id };
   }
 
@@ -57,13 +51,21 @@ export class TransferMoney {
     return payee;
   }
 
-  private async validateBalance(payerId: string, value: number): Promise<void> {
+  private async verifyIfPayerHasEnoughBalance(payerId: string, value: number): Promise<void> {
     const balance = await this.transactionsRepository.calculateBalance(payerId);
     if (balance < value) throw new Error("Insufficient funds");
   }
 
-  private async validateExternalAuthorizer(): Promise<void> {
-    const isAuthorized = await this.externalAuthorizer.isAuthorized();
+  private async verifyIfTransactionIsAuthorized(): Promise<void> {
+    const isAuthorized = await this.authorizer.isAuthorized();
     if (!isAuthorized) throw new Error("Transaction not authorized");
+  }
+
+  private async makeTransfer(input: Input, payee: User): Promise<Transaction> {
+    const transfer = { ...input, type: TransactionType.TRANSFER };
+    const transaction = Transaction.create(transfer);
+    await this.transactionsRepository.create(transaction);
+    await this.broker.publish(new TransferMade({ email: payee.email, value: input.value }));
+    return transaction;
   }
 }

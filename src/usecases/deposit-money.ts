@@ -18,8 +18,7 @@ export class DepositMoney {
   private readonly transactionsRepository: TransactionsRepository;
 
   constructor(input: Dependencies) {
-    this.userRepository = input.userRepository;
-    this.transactionsRepository = input.transactionsRepository;
+    Object.assign(this, input);
   }
 
   async execute(input: Input): Promise<{ transactionId: string }> {

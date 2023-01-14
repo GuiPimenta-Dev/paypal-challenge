@@ -1,4 +1,4 @@
-export class ExternalAuthorizerStub {
+export class AuthorizerStub {
   private status = true;
 
   async isAuthorized(): Promise<boolean> {

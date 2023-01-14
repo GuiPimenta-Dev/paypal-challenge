@@ -1,5 +1,5 @@
+import { AuthorizerStub } from "./utils/mocks/authorizer-stub";
 import { EmailSpy } from "./utils/mocks/email-spy";
-import { ExternalAuthorizerStub } from "./utils/mocks/authorizer-stub";
 import { InMemoryBroker } from "../src/infra/broker/in-memory";
 import { InMemoryTransactionsRepository } from "../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../src/infra/repositories/in-memory/users";
@@ -10,13 +10,13 @@ import { UserBuilder } from "./utils/builder/user";
 
 let userRepository: InMemoryUsersRepository;
 let transactionsRepository: InMemoryTransactionsRepository;
-let externalAuthorizer: ExternalAuthorizerStub;
+let authorizer: AuthorizerStub;
 let broker: InMemoryBroker;
 
 beforeEach(() => {
   userRepository = new InMemoryUsersRepository();
   transactionsRepository = new InMemoryTransactionsRepository();
-  externalAuthorizer = new ExternalAuthorizerStub();
+  authorizer = new AuthorizerStub();
   broker = new InMemoryBroker();
 });
 
@@ -28,7 +28,7 @@ it("should be able to transfer money to another user", async () => {
   const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
 
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
+  const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
   await sut.execute(input);
 
@@ -43,11 +43,9 @@ it("should not be able to transfer money to another user if payer does not have 
   const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
   await userRepository.create(payer);
   await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
-  await transactionsRepository.create(transaction);
 
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
-  const input = { value: 140, payerId: payer.id, payeeId: payee.id };
+  const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
+  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
   await expect(sut.execute(input)).rejects.toThrow("Insufficient funds");
 });
 
@@ -59,28 +57,9 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
   const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
 
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
+  const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
   await expect(sut.execute(input)).rejects.toThrow("Shopkeepers cannot transfer money");
-});
-
-it("should make the transfer only if the external authorizer allows it", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
-  await userRepository.create(payer);
-  await userRepository.create(payee);
-  const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
-  await transactionsRepository.create(transaction);
-  externalAuthorizer.mockResponse(true);
-
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
-  const input = { value: 40, payerId: payer.id, payeeId: payee.id };
-  await sut.execute(input);
-
-  const payerBalance = await transactionsRepository.calculateBalance(payer.id);
-  const payeeBalance = await transactionsRepository.calculateBalance(payee.id);
-  expect(payerBalance).toBe(60);
-  expect(payeeBalance).toBe(40);
 });
 
 it("should not make the transfer if the external authorizer does not allow it", async () => {
@@ -90,9 +69,9 @@ it("should not make the transfer if the external authorizer does not allow it", 
   await userRepository.create(payee);
   const transaction = TransactionBuilder.aDeposit().to(payer.id).build();
   await transactionsRepository.create(transaction);
-  externalAuthorizer.mockResponse(false);
+  authorizer.mockResponse(false);
 
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
+  const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
   await expect(sut.execute(input)).rejects.toThrow("Transaction not authorized");
 });
@@ -108,7 +87,7 @@ it("should send an email to the payee when the transfer is made", async () => {
   const transferMadeHandler = new TransferMadeHandler(emailSpy);
   broker.register(transferMadeHandler);
 
-  const sut = new TransferMoney({ userRepository, transactionsRepository, externalAuthorizer, broker });
+  const sut = new TransferMoney({ userRepository, transactionsRepository, authorizer, broker });
   const input = { value: 40, payerId: payer.id, payeeId: payee.id };
   await sut.execute(input);
 

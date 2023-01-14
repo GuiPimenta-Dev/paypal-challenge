@@ -1,3 +1,3 @@
-export interface ExternalAuthorizer {
+export interface AuthorizerProvider {
   isAuthorized(): Promise<boolean>;
 }

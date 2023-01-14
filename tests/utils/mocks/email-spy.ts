@@ -1,4 +1,4 @@
-import { EmailProvider } from "../../../src/ports/providers/email-provider";
+import { EmailProvider } from "../../../src/ports/providers/email";
 
 export class EmailSpy implements EmailProvider {
   public to: string;
