@@ -1,11 +1,8 @@
-import { Transaction, TransactionType } from "../../../domain/entities/transaction";
-
+import { Transaction } from "../../../domain/entities/transaction";
 import { TransactionsRepository } from "../../../ports/repositories/transactions";
 
 export class InMemoryTransactionsRepository implements TransactionsRepository {
-  private transactions: Transaction[] = [
-    Transaction.mount({ id: "1", payerId: "1", payeeId: "1", value: 100, type: "deposit" as TransactionType }),
-  ];
+  private transactions: Transaction[] = [];
 
   async create(transaction: Transaction): Promise<void> {
     this.transactions.push(transaction);

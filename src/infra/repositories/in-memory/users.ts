@@ -1,12 +1,8 @@
-import { User, UserCategory } from "../../../domain/entities/user";
-
+import { User } from "../../../domain/entities/user";
 import { UsersRepository } from "../../../ports/repositories/users";
 
 export class InMemoryUsersRepository implements UsersRepository {
-  private users: User[] = [
-    User.mount({ id: "1", name: "John Doe", email: "", password: "", cpf: "1", category: "user" as UserCategory }),
-    User.mount({ id: "2", name: "John Doe", email: "", password: "", cpf: "2", category: "user" as UserCategory }),
-  ];
+  private users: User[] = [];
 
   async cpfAlreadyExists(cpf: string): Promise<boolean> {
     return this.users.some((user) => user.cpf === cpf);
