@@ -20,7 +20,7 @@ beforeEach(() => {
 
 it("should be able to transfer money to another user", async () => {
   const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
+  const payee = UserBuilder.anUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
@@ -38,7 +38,7 @@ it("should be able to transfer money to another user", async () => {
 
 it("should not be able to transfer money to another user if payer does not have enough balance", async () => {
   const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
+  const payee = UserBuilder.anUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
 
@@ -62,7 +62,7 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
 
 it("should not make the transfer if the external authorizer does not allow it", async () => {
   const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
+  const payee = UserBuilder.anUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();

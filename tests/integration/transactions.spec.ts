@@ -26,7 +26,7 @@ beforeEach(async () => {
 
 it("should be able to make a transfer and send an email", async () => {
   const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().withAnotherCPF().withAnotherEmail().build();
+  const payee = UserBuilder.anUser().build();
   await config.usersRepository.create(payer);
   await config.usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
