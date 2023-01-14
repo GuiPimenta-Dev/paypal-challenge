@@ -8,7 +8,7 @@ import { TransferMade } from "../domain/events/transfer-made";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
-  userRepository: UsersRepository;
+  usersRepository: UsersRepository;
   transactionsRepository: TransactionsRepository;
   authorizer: AuthorizerProvider;
   broker: Broker;
@@ -21,7 +21,7 @@ interface Input {
 }
 
 export class TransferMoney {
-  private readonly userRepository: UsersRepository;
+  private readonly usersRepository: UsersRepository;
   private readonly transactionsRepository: TransactionsRepository;
   private readonly authorizer: AuthorizerProvider;
   private readonly broker: Broker;
@@ -40,13 +40,13 @@ export class TransferMoney {
   }
 
   private async validatePayer(payerId: string): Promise<void> {
-    const payer = await this.userRepository.findById(payerId);
+    const payer = await this.usersRepository.findById(payerId);
     if (!payer) throw new Error("Payer not found");
     if (payer.category === UserCategory.SHOPKEEPER) throw new Error("Shopkeepers cannot transfer money");
   }
 
   private async validatePayee(payeeId: string): Promise<User> {
-    const payee = await this.userRepository.findById(payeeId);
+    const payee = await this.usersRepository.findById(payeeId);
     if (!payee) throw new Error("Payee not found");
     return payee;
   }
@@ -65,7 +65,8 @@ export class TransferMoney {
     const transfer = { ...input, type: TransactionType.TRANSFER };
     const transaction = Transaction.create(transfer);
     await this.transactionsRepository.create(transaction);
-    await this.broker.publish(new TransferMade({ email: payee.email, value: input.value }));
+    const event = new TransferMade({ email: payee.email, value: input.value });
+    await this.broker.publish(event);
     return transaction;
   }
 }

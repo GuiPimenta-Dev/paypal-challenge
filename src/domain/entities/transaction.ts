@@ -26,4 +26,8 @@ export class Transaction {
   static create(input: Input): Transaction {
     return new Transaction({ id: uuid(), ...input });
   }
+
+  static mount(input: Input & { id: string }): Transaction {
+    return new Transaction(input);
+  }
 }
