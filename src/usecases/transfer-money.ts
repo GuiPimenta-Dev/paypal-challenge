@@ -3,9 +3,9 @@ import { BadRequest } from "../utils/http/bad-request";
 import { Broker } from "../ports/broker/broker";
 import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
-import { Transfer } from "../domain/entities/transaction/transfer";
+import { Transfer } from "../domain/entities/transfer";
 import { TransferMade } from "../domain/events/transfer-made";
-import { UserCategory } from "../domain/entities/user/user";
+import { UserCategory } from "../domain/entities/user";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {

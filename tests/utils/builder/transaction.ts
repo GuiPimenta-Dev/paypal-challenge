@@ -1,5 +1,5 @@
-import { Deposit } from "../../../src/domain/entities/transaction/deposit";
-import { Transfer } from "../../../src/domain/entities/transaction/transfer";
+import { Deposit } from "../../../src/domain/entities/deposit";
+import { Transfer } from "../../../src/domain/entities/transfer";
 
 export class TransactionBuilder {
   payerId?: string;

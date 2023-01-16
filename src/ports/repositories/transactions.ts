@@ -1,4 +1,4 @@
-import { Transaction } from "../../domain/entities/transaction/extends/transactions";
+import { Transaction } from "../../domain/entities/extends/transactions";
 
 export interface TransactionsRepository {
   create(transaction: Transaction): Promise<void>;

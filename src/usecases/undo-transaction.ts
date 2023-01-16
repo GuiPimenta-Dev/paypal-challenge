@@ -1,6 +1,6 @@
 import { BadRequest } from "../utils/http/bad-request";
 import { NotFound } from "../utils/http/not-found";
-import { RollbackableTransaction } from "../domain/entities/transaction/extends/transactions";
+import { RollbackableTransaction } from "../domain/entities/extends/transactions";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 
 interface Dependencies {
