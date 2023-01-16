@@ -1,13 +1,10 @@
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
-import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
 import { TransactionBuilder } from "../utils/builder/transaction";
 import { UndoTransaction } from "../../src/usecases/undo-transaction";
 import { UserBuilder } from "../utils/builder/user";
 
 test("It should be able to undo a deposit transaction", async () => {
-  const usersRepository = new InMemoryUsersRepository();
   const user = UserBuilder.anUser().build();
-  await usersRepository.create(user);
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(user.id).build();
   await transactionsRepository.create(deposit);
@@ -21,11 +18,8 @@ test("It should be able to undo a deposit transaction", async () => {
 });
 
 test("It should be able to undo a transfer transaction", async () => {
-  const usersRepository = new InMemoryUsersRepository();
   const payer = UserBuilder.anUser().build();
   const payee = UserBuilder.anUser().build();
-  await usersRepository.create(payer);
-  await usersRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   const transfer = TransactionBuilder.aTransfer().of(100).from(payer.id).to(payee.id).build();

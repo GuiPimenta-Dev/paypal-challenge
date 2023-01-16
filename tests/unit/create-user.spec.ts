@@ -3,13 +3,13 @@ import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/
 import { UserBuilder } from "../utils/builder/user";
 
 it("should be able to create a new user on database", async () => {
-  const userRepository = new InMemoryUsersRepository();
+  const usersRepository = new InMemoryUsersRepository();
 
-  const sut = new CreateUser(userRepository);
+  const sut = new CreateUser({ usersRepository });
   const defaultUser = UserBuilder.anUser().build();
   await sut.execute(defaultUser);
 
-  const user = await userRepository.findByCPF("12345678910");
+  const user = await usersRepository.findByCPF("12345678910");
   expect(user).toHaveProperty("id");
   expect(user.name).toBe("John Doe");
   expect(user.email).toBe("john_doe@gmail.com");
@@ -19,21 +19,21 @@ it("should be able to create a new user on database", async () => {
 });
 
 it("should not be able to create a new user with an existing CPF", async () => {
-  const userRepository = new InMemoryUsersRepository();
+  const usersRepository = new InMemoryUsersRepository();
   const user = UserBuilder.anUser().build();
-  await userRepository.create(user);
+  await usersRepository.create(user);
 
-  const sut = new CreateUser(userRepository);
+  const sut = new CreateUser({ usersRepository });
   const userWithExistentCPF = UserBuilder.anUser().build();
   await expect(sut.execute(userWithExistentCPF)).rejects.toThrow("CPF already exists");
 });
 
 it("should not be able to create a new user with an existing email", async () => {
-  const userRepository = new InMemoryUsersRepository();
+  const usersRepository = new InMemoryUsersRepository();
   const user = UserBuilder.anUser().build();
-  await userRepository.create(user);
+  await usersRepository.create(user);
 
-  const sut = new CreateUser(userRepository);
+  const sut = new CreateUser({ usersRepository });
   const userWithExistentEmail = UserBuilder.anUser().withAnotherCPF().build();
   await expect(sut.execute(userWithExistentEmail)).rejects.toThrow("Email already exists");
 });
