@@ -11,10 +11,10 @@ beforeEach(async () => {
 it("Should be able to create an user", async () => {
   const user = UserBuilder.aUser().build();
 
-  const response = await request(app)
+  const sut = await request(app)
     .post("/users")
     .send({ ...user });
 
-  expect(response.statusCode).toBe(201);
-  expect(response.body).toHaveProperty("userId");
+  expect(sut.statusCode).toBe(201);
+  expect(sut.body).toHaveProperty("userId");
 });

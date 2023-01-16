@@ -33,12 +33,12 @@ it("should be able authorize the transaction, make the transfer and send an emai
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
   await config.transactionsRepository.create(deposit);
 
-  const response = await request(app)
+  const sut = await request(app)
     .post("/transactions/transfer")
     .send({ payerId: payer.id, payeeId: payee.id, value: 10 });
 
-  expect(response.statusCode).toBe(200);
-  expect(response.body).toHaveProperty("transactionId");
+  expect(sut.statusCode).toBe(200);
+  expect(sut.body).toHaveProperty("transactionId");
   expect(httpClientMock.calledUrls[0]).toBe("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6");
   expect(httpClientMock.calledUrls[1]).toBe("http://o4d9z.mocklab.io/notify");
 });
@@ -47,10 +47,10 @@ it("should be able to make a deposit", async () => {
   const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payee);
 
-  const response = await request(app).post("/transactions/deposit").send({ payeeId: payee.id, value: 10 });
+  const sut = await request(app).post("/transactions/deposit").send({ payeeId: payee.id, value: 10 });
 
-  expect(response.statusCode).toBe(200);
-  expect(response.body).toHaveProperty("transactionId");
+  expect(sut.statusCode).toBe(200);
+  expect(sut.body).toHaveProperty("transactionId");
 });
 
 it("Should be able to undo a transaction", async () => {
@@ -59,8 +59,8 @@ it("Should be able to undo a transaction", async () => {
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
   await config.transactionsRepository.create(deposit);
 
-  const response = await request(app).delete(`/transactions/${deposit.id}`);
+  const sut = await request(app).delete(`/transactions/${deposit.id}`);
 
-  expect(response.statusCode).toBe(200);
-  expect(response.body).toHaveProperty("transactionId");
+  expect(sut.statusCode).toBe(200);
+  expect(sut.body).toHaveProperty("transactionId");
 });
