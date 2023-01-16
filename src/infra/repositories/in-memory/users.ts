@@ -12,10 +12,6 @@ export class InMemoryUsersRepository implements UsersRepository {
     return this.users.some((user) => user.email === email);
   }
 
-  async findByCPF(cpf: string): Promise<User | undefined> {
-    return this.users.find((user) => user.cpf === cpf);
-  }
-
   async findById(id: string): Promise<User | undefined> {
     return this.users.find((user) => user.id === id);
   }
