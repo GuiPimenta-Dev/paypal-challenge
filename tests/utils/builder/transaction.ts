@@ -2,6 +2,7 @@ import { Transaction, TransactionType } from "../../../src/domain/entities/trans
 
 export class TransactionBuilder {
   type: TransactionType;
+  payerId?: string;
   payeeId: string;
   value: number;
 
@@ -11,8 +12,19 @@ export class TransactionBuilder {
     return deposit;
   }
 
+  static aTransfer() {
+    const transfer = new TransactionBuilder();
+    transfer.type = TransactionType.TRANSFER;
+    return transfer;
+  }
+
   of(value: number) {
     this.value = value;
+    return this;
+  }
+
+  from(payerId: string) {
+    this.payerId = payerId;
     return this;
   }
 
@@ -22,6 +34,6 @@ export class TransactionBuilder {
   }
 
   build() {
-    return Transaction.create({ type: this.type, payeeId: this.payeeId, value: this.value });
+    return Transaction.create({ type: this.type, payerId: this.payerId, payeeId: this.payeeId, value: this.value });
   }
 }
