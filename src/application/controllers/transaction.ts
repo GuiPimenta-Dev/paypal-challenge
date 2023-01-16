@@ -1,5 +1,5 @@
 import { DepositMoney } from "../../usecases/deposit-money";
-import { HttpInput } from "../../ports/http/http-client";
+import { HttpInput } from "../../ports/http/http-input";
 import { Success } from "../../utils/http/success";
 import { TransferMoney } from "../../usecases/transfer-money";
 import { UndoTransaction } from "../../usecases/undo-transaction";

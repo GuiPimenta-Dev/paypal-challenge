@@ -1,6 +1,6 @@
 import { CreateUser } from "../../usecases/create-user";
 import { Created } from "../../utils/http/created";
-import { HttpInput } from "../../ports/http/http-client";
+import { HttpInput } from "../../ports/http/http-input";
 import { config } from "../../config";
 
 export class UserController {

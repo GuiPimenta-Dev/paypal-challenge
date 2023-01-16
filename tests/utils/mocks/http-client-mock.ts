@@ -1,4 +1,5 @@
-import { HttpClient, HttpOutput } from "../../../src/ports/http/http-client";
+import { HttpClient } from "../../../src/ports/http/http-client";
+import { HttpOutput } from "../../../src/ports/http/http-output";
 
 export class HttpClientMock implements HttpClient {
   calledUrls: string[] = [];
