@@ -1,12 +1,11 @@
-import { Transaction, TransactionType } from "../domain/entities/transaction";
-
 import { AuthorizerProvider } from "../ports/providers/authorizer";
 import { BadRequest } from "../utils/http/bad-request";
 import { Broker } from "../ports/broker/broker";
 import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
+import { Transfer } from "../domain/entities/transaction/transfer";
 import { TransferMade } from "../domain/events/transfer-made";
-import { UserCategory } from "../domain/entities/user";
+import { UserCategory } from "../domain/entities/user/user";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {
@@ -37,8 +36,8 @@ export class TransferMoney {
     await this.validatePayee(input.payeeId);
     await this.verifyIfPayerHasEnoughBalance(input.payerId, input.value);
     await this.verifyIfTransactionIsAuthorized();
-    const transaction = await this.makeTransfer(input);
-    return { transactionId: transaction.id };
+    const transfer = await this.makeTransfer(input);
+    return { transactionId: transfer.id };
   }
 
   private async validatePayer(payerId: string): Promise<void> {
@@ -62,12 +61,11 @@ export class TransferMoney {
     if (!isAuthorized) throw new BadRequest("Transaction not authorized");
   }
 
-  private async makeTransfer(input: Input): Promise<Transaction> {
-    const transfer = { ...input, type: TransactionType.TRANSFER };
-    const transaction = Transaction.create(transfer);
-    await this.transactionsRepository.create(transaction);
+  private async makeTransfer(input: Input): Promise<Transfer> {
+    const transfer = Transfer.create(input);
+    await this.transactionsRepository.create(transfer);
     const event = new TransferMade();
     await this.broker.publish(event);
-    return transaction;
+    return transfer;
   }
 }

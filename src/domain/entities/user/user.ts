@@ -28,8 +28,4 @@ export class User {
   static create(input: Input): User {
     return new User({ id: uuid(), ...input });
   }
-
-  static mount(input: Input & { id: string }): User {
-    return new User(input);
-  }
 }

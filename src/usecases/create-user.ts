@@ -1,4 +1,4 @@
-import { User, UserCategory } from "../domain/entities/user";
+import { User, UserCategory } from "../domain/entities/user/user";
 
 import { BadRequest } from "../utils/http/bad-request";
 import { UsersRepository } from "../ports/repositories/users";

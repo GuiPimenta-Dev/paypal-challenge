@@ -1,20 +1,21 @@
-import { Transaction, TransactionType } from "../../../src/domain/entities/transaction";
+import { Deposit } from "../../../src/domain/entities/transaction/deposit";
+import { Transfer } from "../../../src/domain/entities/transaction/transfer";
 
 export class TransactionBuilder {
-  type: TransactionType;
   payerId?: string;
   payeeId: string;
   value: number;
+  type: string;
 
   static aDeposit() {
     const deposit = new TransactionBuilder();
-    deposit.type = TransactionType.DEPOSIT;
+    deposit.type = "deposit";
     return deposit;
   }
 
   static aTransfer() {
     const transfer = new TransactionBuilder();
-    transfer.type = TransactionType.TRANSFER;
+    transfer.type = "transfer";
     return transfer;
   }
 
@@ -34,6 +35,7 @@ export class TransactionBuilder {
   }
 
   build() {
-    return Transaction.create({ type: this.type, payerId: this.payerId, payeeId: this.payeeId, value: this.value });
+    if (this.type === "deposit") return Deposit.create({ payeeId: this.payeeId, value: this.value });
+    return Transfer.create({ payerId: this.payerId, payeeId: this.payeeId, value: this.value });
   }
 }

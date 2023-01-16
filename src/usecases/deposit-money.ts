@@ -1,5 +1,4 @@
-import { Transaction, TransactionType } from "../domain/entities/transaction";
-
+import { Deposit } from "../domain/entities/transaction/deposit";
 import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { UsersRepository } from "../ports/repositories/users";
@@ -10,7 +9,7 @@ interface Dependencies {
 }
 
 interface Input {
-  userId: string;
+  payeeId: string;
   value: number;
 }
 
@@ -23,11 +22,10 @@ export class DepositMoney {
   }
 
   async execute(input: Input): Promise<{ transactionId: string }> {
-    const user = await this.usersRepository.findById(input.userId);
+    const user = await this.usersRepository.findById(input.payeeId);
     if (!user) throw new NotFound("User not found");
-    const deposit = { payeeId: input.userId, value: input.value, type: TransactionType.DEPOSIT };
-    const transaction = Transaction.create(deposit);
-    await this.transactionsRepository.create(transaction);
-    return { transactionId: transaction.id };
+    const deposit = Deposit.create(input);
+    await this.transactionsRepository.create(deposit);
+    return { transactionId: deposit.id };
   }
 }

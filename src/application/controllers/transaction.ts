@@ -23,7 +23,7 @@ export class TransactionController {
   static async undo(input: HttpInput): Promise<Success> {
     const { path } = input;
     const usecase = new UndoTransaction({ ...config });
-    await usecase.execute(path);
-    return new Success();
+    const response = await usecase.execute(path);
+    return new Success(response);
   }
 }

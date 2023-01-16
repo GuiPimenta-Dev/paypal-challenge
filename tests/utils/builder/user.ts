@@ -1,4 +1,4 @@
-import { User, UserCategory } from "../../../src/domain/entities/user";
+import { User, UserCategory } from "../../../src/domain/entities/user/user";
 
 export class UserBuilder {
   email = "john_doe@gmail.com";

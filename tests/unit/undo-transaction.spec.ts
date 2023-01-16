@@ -35,3 +35,14 @@ test("It should be able to undo a transfer transaction", async () => {
   expect(payerBalance).toBe(100);
   expect(payeeBalance).toBe(0);
 });
+
+test("It should not be able to undo a non rollbackable transaction", async () => {
+  const transactionsRepository = new InMemoryTransactionsRepository();
+  const deposit = TransactionBuilder.aDeposit().build();
+  const rollback = deposit.rollback();
+  await transactionsRepository.create(rollback);
+
+  const sut = new UndoTransaction({ transactionsRepository });
+  const input = { transactionId: rollback.id };
+  await expect(sut.execute(input)).rejects.toThrow("Transaction cannot be undone");
+});

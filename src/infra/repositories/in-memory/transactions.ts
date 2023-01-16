@@ -1,4 +1,4 @@
-import { Transaction } from "../../../domain/entities/transaction";
+import { Transaction } from "../../../domain/entities/transaction/extends/transactions";
 import { TransactionsRepository } from "../../../ports/repositories/transactions";
 
 export class InMemoryTransactionsRepository implements TransactionsRepository {

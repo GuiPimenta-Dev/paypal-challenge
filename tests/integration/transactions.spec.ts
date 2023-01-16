@@ -42,10 +42,10 @@ it("should be able to make a transfer and send an email", async () => {
 });
 
 it("should be able to make a deposit", async () => {
-  const user = UserBuilder.anUser().build();
-  await config.usersRepository.create(user);
+  const payee = UserBuilder.anUser().build();
+  await config.usersRepository.create(payee);
 
-  const response = await request(app).post("/transactions/deposit").send({ userId: user.id, value: 10 });
+  const response = await request(app).post("/transactions/deposit").send({ payeeId: payee.id, value: 10 });
 
   expect(response.statusCode).toBe(200);
   expect(response.body).toHaveProperty("transactionId");
