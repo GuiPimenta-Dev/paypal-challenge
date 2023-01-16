@@ -7,7 +7,7 @@ import { MockyAdapter } from "../../src/infra/providers/mocky-adapter";
 import { TransactionBuilder } from "../utils/builder/transaction";
 import { TransferMadeHandler } from "../../src/application/handlers/transfer-made";
 import { UserBuilder } from "../utils/builder/user";
-import app from "../../src/router";
+import { app } from "../../src/router";
 import { config } from "../../src/config";
 import request from "supertest";
 

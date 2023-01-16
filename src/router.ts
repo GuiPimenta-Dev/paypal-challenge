@@ -9,4 +9,4 @@ app.post("/transactions/transfer", ExpressAdapter.route(TransactionController.tr
 app.post("/transactions/deposit", ExpressAdapter.route(TransactionController.deposit));
 app.delete("/transactions/:transactionId", ExpressAdapter.route(TransactionController.undo));
 
-export default app;
+export { app };
