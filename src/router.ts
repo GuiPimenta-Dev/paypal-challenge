@@ -7,6 +7,6 @@ const app = ExpressAdapter.create();
 app.post("/users", ExpressAdapter.route(UserController.create));
 app.post("/transactions/transfer", ExpressAdapter.route(TransactionController.transfer));
 app.post("/transactions/deposit", ExpressAdapter.route(TransactionController.deposit));
-app.post("/transactions/undo", ExpressAdapter.route(TransactionController.undo));
+app.delete("/transactions/:transactionId", ExpressAdapter.route(TransactionController.undo));
 
 export default app;

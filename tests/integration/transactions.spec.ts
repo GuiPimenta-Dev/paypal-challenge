@@ -57,7 +57,7 @@ it("Should be able to undo a transaction", async () => {
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
   await config.transactionsRepository.create(deposit);
 
-  const response = await request(app).post("/transactions/undo").send({ transactionId: deposit.id });
+  const response = await request(app).delete(`/transactions/${deposit.id}`);
 
   expect(response.statusCode).toBe(200);
 });
