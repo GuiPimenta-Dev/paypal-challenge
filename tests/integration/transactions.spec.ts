@@ -37,5 +37,27 @@ it("should be able to make a transfer and send an email", async () => {
     .send({ payerId: payer.id, payeeId: payee.id, value: 10 });
 
   expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty("transactionId");
   expect(emailSpy.wasCalled).toBe(true);
+});
+
+it("should be able to make a deposit", async () => {
+  const user = UserBuilder.anUser().build();
+  await config.usersRepository.create(user);
+
+  const response = await request(app).post("/transactions/deposit").send({ userId: user.id, value: 10 });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty("transactionId");
+});
+
+it("Should be able to undo a transaction", async () => {
+  const payer = UserBuilder.anUser().build();
+  await config.usersRepository.create(payer);
+  const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
+  await config.transactionsRepository.create(deposit);
+
+  const response = await request(app).post("/transactions/undo").send({ transactionId: deposit.id });
+
+  expect(response.statusCode).toBe(200);
 });
