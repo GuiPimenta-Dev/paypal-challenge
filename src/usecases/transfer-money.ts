@@ -4,7 +4,7 @@ import { Broker } from "../ports/broker/broker";
 import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { Transfer } from "../domain/entities/transfer";
-import { TransferMade } from "../domain/events/transfer-made";
+import { TransferMadeEvent } from "../domain/events/transfer-made";
 import { UserCategory } from "../domain/entities/user";
 import { UsersRepository } from "../ports/repositories/users";
 
@@ -37,6 +37,8 @@ export class TransferMoney {
     await this.verifyIfPayerHasEnoughBalance(input.payerId, input.value);
     await this.verifyIfTransactionIsAuthorized();
     const transfer = await this.makeTransfer(input);
+    const event = new TransferMadeEvent();
+    this.broker.publish(event);
     return { transactionId: transfer.id };
   }
 
@@ -64,8 +66,6 @@ export class TransferMoney {
   private async makeTransfer(input: Input): Promise<Transfer> {
     const transfer = Transfer.create(input);
     await this.transactionsRepository.create(transfer);
-    const event = new TransferMade();
-    this.broker.publish(event);
     return transfer;
   }
 }
