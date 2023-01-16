@@ -62,4 +62,5 @@ it("Should be able to undo a transaction", async () => {
   const response = await request(app).delete(`/transactions/${deposit.id}`);
 
   expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty("transactionId");
 });
