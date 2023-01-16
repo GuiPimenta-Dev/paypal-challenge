@@ -15,8 +15,8 @@ let httpClientMock: HttpClientMock;
 let emailSpy: EmailSpy;
 
 beforeEach(async () => {
-  httpClientMock = new HttpClientMock();
   emailSpy = new EmailSpy();
+  httpClientMock = new HttpClientMock();
   const handler = new TransferMadeHandler(emailSpy);
   const broker = new InMemoryBroker();
   broker.register(handler);
