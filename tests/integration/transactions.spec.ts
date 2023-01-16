@@ -1,8 +1,8 @@
-import { EmailSpy } from "../utils/mocks/email-spy";
 import { HttpClientMock } from "../utils/mocks/http-client-mock";
 import { InMemoryBroker } from "../../src/infra/broker/in-memory";
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
+import { MockLabAdapter } from "../../src/infra/providers/mocklab-adapter";
 import { MockyAdapter } from "../../src/infra/providers/mocky-adapter";
 import { TransactionBuilder } from "../utils/builder/transaction";
 import { TransferMadeHandler } from "../../src/application/handlers/transfer-made";
@@ -12,12 +12,11 @@ import { config } from "../../src/config";
 import request from "supertest";
 
 let httpClientMock: HttpClientMock;
-let emailSpy: EmailSpy;
 
 beforeEach(async () => {
-  emailSpy = new EmailSpy();
   httpClientMock = new HttpClientMock();
-  const handler = new TransferMadeHandler(emailSpy);
+  const emailProvider = new MockLabAdapter(httpClientMock);
+  const handler = new TransferMadeHandler(emailProvider);
   const broker = new InMemoryBroker();
   broker.register(handler);
   config.usersRepository = new InMemoryUsersRepository();
@@ -40,8 +39,8 @@ it("should be able authorize the transaction, make the transfer and send an emai
 
   expect(response.statusCode).toBe(200);
   expect(response.body).toHaveProperty("transactionId");
-  expect(httpClientMock.urlCalled).toBe("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6");
-  expect(emailSpy.wasCalled).toBe(true);
+  expect(httpClientMock.calledUrls[0]).toBe("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6");
+  expect(httpClientMock.calledUrls[1]).toBe("http://o4d9z.mocklab.io/notify");
 });
 
 it("should be able to make a deposit", async () => {
