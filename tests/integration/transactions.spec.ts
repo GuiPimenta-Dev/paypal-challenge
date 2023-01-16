@@ -11,12 +11,12 @@ import { app } from "../../src/router";
 import { config } from "../../src/config";
 import request from "supertest";
 
-let emailSpy: EmailSpy;
 let httpClientMock: HttpClientMock;
+let emailSpy: EmailSpy;
 
 beforeEach(async () => {
-  emailSpy = new EmailSpy();
   httpClientMock = new HttpClientMock();
+  emailSpy = new EmailSpy();
   const handler = new TransferMadeHandler(emailSpy);
   const broker = new InMemoryBroker();
   broker.register(handler);
@@ -26,7 +26,7 @@ beforeEach(async () => {
   config.broker = broker;
 });
 
-it("should be able to make the transfer, authorize the transaction and send an email", async () => {
+it("should be able authorize the transaction, make the transfer and send an email", async () => {
   const payer = UserBuilder.aUser().build();
   const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
@@ -40,8 +40,8 @@ it("should be able to make the transfer, authorize the transaction and send an e
 
   expect(response.statusCode).toBe(200);
   expect(response.body).toHaveProperty("transactionId");
-  expect(emailSpy.wasCalled).toBe(true);
   expect(httpClientMock.urlCalled).toBe("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6");
+  expect(emailSpy.wasCalled).toBe(true);
 });
 
 it("should be able to make a deposit", async () => {
