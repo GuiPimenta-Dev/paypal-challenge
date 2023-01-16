@@ -13,10 +13,10 @@ export class InMemoryBroker implements Broker {
     this.handlers.push(handler);
   }
 
-  async publish(action: DomainEvent): Promise<void> {
+  publish(action: DomainEvent): void {
     this.handlers.forEach(async (handler) => {
       if (handler.name === action.name) {
-        await handler.handle(action);
+        handler.handle(action);
       }
     });
   }

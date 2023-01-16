@@ -65,7 +65,7 @@ export class TransferMoney {
     const transfer = Transfer.create(input);
     await this.transactionsRepository.create(transfer);
     const event = new TransferMade();
-    await this.broker.publish(event);
+    this.broker.publish(event);
     return transfer;
   }
 }
