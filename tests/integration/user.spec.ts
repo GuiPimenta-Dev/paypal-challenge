@@ -9,7 +9,7 @@ beforeEach(async () => {
 });
 
 it("Should be able to create an user", async () => {
-  const user = UserBuilder.anUser().build();
+  const user = UserBuilder.aUser().build();
 
   const response = await request(app)
     .post("/users")

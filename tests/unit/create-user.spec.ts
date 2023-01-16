@@ -6,7 +6,7 @@ it("should be able to create a new user on database", async () => {
   const usersRepository = new InMemoryUsersRepository();
 
   const sut = new CreateUser({ usersRepository });
-  const defaultUser = UserBuilder.anUser().build();
+  const defaultUser = UserBuilder.aUser().build();
   await sut.execute(defaultUser);
 
   const user = await usersRepository.findByCPF("12345678910");
@@ -20,20 +20,20 @@ it("should be able to create a new user on database", async () => {
 
 it("should not be able to create a new user with an existing CPF", async () => {
   const usersRepository = new InMemoryUsersRepository();
-  const user = UserBuilder.anUser().build();
+  const user = UserBuilder.aUser().build();
   await usersRepository.create(user);
 
   const sut = new CreateUser({ usersRepository });
-  const userWithExistentCPF = UserBuilder.anUser().build();
+  const userWithExistentCPF = UserBuilder.aUser().build();
   await expect(sut.execute(userWithExistentCPF)).rejects.toThrow("CPF already exists");
 });
 
 it("should not be able to create a new user with an existing email", async () => {
   const usersRepository = new InMemoryUsersRepository();
-  const user = UserBuilder.anUser().build();
+  const user = UserBuilder.aUser().build();
   await usersRepository.create(user);
 
   const sut = new CreateUser({ usersRepository });
-  const userWithExistentEmail = UserBuilder.anUser().withAnotherCPF().build();
+  const userWithExistentEmail = UserBuilder.aUser().withAnotherCPF().build();
   await expect(sut.execute(userWithExistentEmail)).rejects.toThrow("Email already exists");
 });

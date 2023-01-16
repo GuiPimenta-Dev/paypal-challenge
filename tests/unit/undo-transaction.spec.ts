@@ -4,7 +4,7 @@ import { UndoTransaction } from "../../src/usecases/undo-transaction";
 import { UserBuilder } from "../utils/builder/user";
 
 test("It should be able to undo a deposit transaction", async () => {
-  const user = UserBuilder.anUser().build();
+  const user = UserBuilder.aUser().build();
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(user.id).build();
   await transactionsRepository.create(deposit);
@@ -18,8 +18,8 @@ test("It should be able to undo a deposit transaction", async () => {
 });
 
 test("It should be able to undo a transfer transaction", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
+  const payee = UserBuilder.aUser().build();
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   const transfer = TransactionBuilder.aTransfer().of(100).from(payer.id).to(payee.id).build();

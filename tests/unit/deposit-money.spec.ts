@@ -5,7 +5,7 @@ import { UserBuilder } from "../utils/builder/user";
 
 it("shoould be able to deposit money", async () => {
   const usersRepository = new InMemoryUsersRepository();
-  const payee = UserBuilder.anUser().build();
+  const payee = UserBuilder.aUser().build();
   await usersRepository.create(payee);
   const transactionsRepository = new InMemoryTransactionsRepository();
 

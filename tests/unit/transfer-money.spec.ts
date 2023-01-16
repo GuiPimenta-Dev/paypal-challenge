@@ -19,8 +19,8 @@ beforeEach(() => {
 });
 
 it("should be able to transfer money to another user", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
+  const payee = UserBuilder.aUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
@@ -37,7 +37,7 @@ it("should be able to transfer money to another user", async () => {
 });
 
 it("should be able to transfer money to a shopkeeper", async () => {
-  const payer = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
   const payee = UserBuilder.aShopkeeper().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
@@ -55,8 +55,8 @@ it("should be able to transfer money to a shopkeeper", async () => {
 });
 
 it("should not be able to transfer money to another user if payer does not have enough balance", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
+  const payee = UserBuilder.aUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
 
@@ -67,7 +67,7 @@ it("should not be able to transfer money to another user if payer does not have 
 
 it("should not be able to transfer money if you are a shopkeeper", async () => {
   const payer = UserBuilder.aShopkeeper().build();
-  const payee = UserBuilder.anUser().build();
+  const payee = UserBuilder.aUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
@@ -79,8 +79,8 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
 });
 
 it("should not make the transfer if the external authorizer does not allows it", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
+  const payee = UserBuilder.aUser().build();
   await usersRepository.create(payer);
   await usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();

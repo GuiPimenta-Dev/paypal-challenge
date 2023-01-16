@@ -25,8 +25,8 @@ beforeEach(async () => {
 });
 
 it("should be able to make a transfer and send an email", async () => {
-  const payer = UserBuilder.anUser().build();
-  const payee = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
+  const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
   await config.usersRepository.create(payee);
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
@@ -42,7 +42,7 @@ it("should be able to make a transfer and send an email", async () => {
 });
 
 it("should be able to make a deposit", async () => {
-  const payee = UserBuilder.anUser().build();
+  const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payee);
 
   const response = await request(app).post("/transactions/deposit").send({ payeeId: payee.id, value: 10 });
@@ -52,7 +52,7 @@ it("should be able to make a deposit", async () => {
 });
 
 it("Should be able to undo a transaction", async () => {
-  const payer = UserBuilder.anUser().build();
+  const payer = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
   await config.transactionsRepository.create(deposit);

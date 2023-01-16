@@ -5,7 +5,7 @@ export class UserBuilder {
   cpf = "12345678910";
   category: UserCategory;
 
-  static anUser() {
+  static aUser() {
     const user = new UserBuilder();
     user.category = UserCategory.USER;
     return user;
