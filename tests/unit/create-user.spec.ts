@@ -7,9 +7,9 @@ it("should be able to create a new user on database", async () => {
 
   const sut = new CreateUser({ usersRepository });
   const defaultUser = UserBuilder.aUser().build();
-  await sut.execute(defaultUser);
+  const { userId } = await sut.execute(defaultUser);
 
-  const user = await usersRepository.findByCPF("12345678910");
+  const user = await usersRepository.findById(userId);
   expect(user).toHaveProperty("id");
   expect(user.name).toBe("John Doe");
   expect(user.email).toBe("john_doe@gmail.com");
