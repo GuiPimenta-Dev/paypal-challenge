@@ -1,9 +1,9 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
 import { AuthorizerProvider } from "../ports/providers/authorizer";
-import { BadRequest } from "../utils/http/BadRequest";
+import { BadRequest } from "../utils/http/bad-request";
 import { Broker } from "../ports/broker/broker";
-import { NotFound } from "../utils/http/NotFound";
+import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { TransferMade } from "../domain/events/transfer-made";
 import { UserCategory } from "../domain/entities/user";

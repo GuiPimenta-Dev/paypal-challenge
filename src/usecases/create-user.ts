@@ -1,6 +1,6 @@
 import { User, UserCategory } from "../domain/entities/user";
 
-import { BadRequest } from "../utils/http/BadRequest";
+import { BadRequest } from "../utils/http/bad-request";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Input {

@@ -1,6 +1,6 @@
 import { Transaction, TransactionType } from "../domain/entities/transaction";
 
-import { NotFound } from "../utils/http/NotFound";
+import { NotFound } from "../utils/http/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { UsersRepository } from "../ports/repositories/users";
 

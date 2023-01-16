@@ -1,4 +1,4 @@
-import { HttpError } from "../../utils/http/extends/HttpError";
+import { HttpError } from "../../utils/http/extends/http-error";
 import express from "express";
 
 export class ExpressAdapter {

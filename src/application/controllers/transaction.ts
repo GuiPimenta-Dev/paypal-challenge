@@ -1,6 +1,6 @@
 import { DepositMoney } from "../../usecases/deposit-money";
 import { HttpInput } from "../../ports/http/http-client";
-import { Success } from "../../utils/http/Success";
+import { Success } from "../../utils/http/success";
 import { TransferMoney } from "../../usecases/transfer-money";
 import { config } from "../../config";
 

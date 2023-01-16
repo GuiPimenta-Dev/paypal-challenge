@@ -1,4 +1,4 @@
-import { HttpSuccess } from "./extends/HttpSuccess";
+import { HttpSuccess } from "./extends/http-success";
 
 export class Created extends HttpSuccess {
   constructor(readonly data?: any) {

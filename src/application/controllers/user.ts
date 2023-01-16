@@ -1,5 +1,5 @@
 import { CreateUser } from "../../usecases/create-user";
-import { Created } from "../../utils/http/Created";
+import { Created } from "../../utils/http/created";
 import { HttpInput } from "../../ports/http/http-client";
 import { config } from "../../config";
 

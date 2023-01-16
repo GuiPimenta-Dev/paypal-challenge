@@ -78,7 +78,7 @@ it("should not be able to transfer money if you are a shopkeeper", async () => {
   await expect(sut.execute(input)).rejects.toThrow("Shopkeepers cannot transfer money");
 });
 
-it("should not make the transfer if the external authorizer does not allow it", async () => {
+it("should not make the transfer if the external authorizer does not allows it", async () => {
   const payer = UserBuilder.anUser().build();
   const payee = UserBuilder.anUser().build();
   await usersRepository.create(payer);
