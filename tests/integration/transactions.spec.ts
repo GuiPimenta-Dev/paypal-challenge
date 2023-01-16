@@ -1,5 +1,5 @@
-import { AxiosAdapter } from "../../src/infra/http/axios-adapter";
 import { EmailSpy } from "../utils/mocks/email-spy";
+import { HttpClientMock } from "../utils/mocks/http-client-mock";
 import { InMemoryBroker } from "../../src/infra/broker/in-memory";
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
@@ -12,19 +12,21 @@ import { config } from "../../src/config";
 import request from "supertest";
 
 let emailSpy: EmailSpy;
+let httpClientMock: HttpClientMock;
 
 beforeEach(async () => {
   emailSpy = new EmailSpy();
+  httpClientMock = new HttpClientMock();
   const handler = new TransferMadeHandler(emailSpy);
   const broker = new InMemoryBroker();
   broker.register(handler);
   config.usersRepository = new InMemoryUsersRepository();
   config.transactionsRepository = new InMemoryTransactionsRepository();
-  config.authorizer = new MockyAdapter(new AxiosAdapter());
+  config.authorizer = new MockyAdapter(httpClientMock);
   config.broker = broker;
 });
 
-it("should be able to make a transfer and send an email", async () => {
+it("should be able to make the transfer, authorize the transaction and send an email", async () => {
   const payer = UserBuilder.aUser().build();
   const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
@@ -39,6 +41,7 @@ it("should be able to make a transfer and send an email", async () => {
   expect(response.statusCode).toBe(200);
   expect(response.body).toHaveProperty("transactionId");
   expect(emailSpy.wasCalled).toBe(true);
+  expect(httpClientMock.urlCalled).toBe("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6");
 });
 
 it("should be able to make a deposit", async () => {
