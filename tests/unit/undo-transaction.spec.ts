@@ -3,7 +3,7 @@ import { TransactionBuilder } from "../utils/builder/transaction";
 import { UndoTransaction } from "../../src/usecases/undo-transaction";
 import { UserBuilder } from "../utils/builder/user";
 
-test("It should be able to undo a deposit transaction", async () => {
+it("should be able to undo a deposit transaction", async () => {
   const user = UserBuilder.aUser().build();
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(user.id).build();
@@ -17,7 +17,7 @@ test("It should be able to undo a deposit transaction", async () => {
   expect(balance).toBe(0);
 });
 
-test("It should be able to undo a transfer transaction", async () => {
+it("should be able to undo a transfer transaction", async () => {
   const payer = UserBuilder.aUser().build();
   const payee = UserBuilder.aUser().build();
   const transactionsRepository = new InMemoryTransactionsRepository();
@@ -36,7 +36,7 @@ test("It should be able to undo a transfer transaction", async () => {
   expect(payeeBalance).toBe(0);
 });
 
-test("It should not be able to undo a non rollbackable transaction", async () => {
+it("should not be able to undo a non rollbackable transaction", async () => {
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().build();
   const rollback = deposit.rollback();
@@ -45,4 +45,15 @@ test("It should not be able to undo a non rollbackable transaction", async () =>
   const sut = new UndoTransaction({ transactionsRepository });
   const input = { transactionId: rollback.id };
   await expect(sut.execute(input)).rejects.toThrow("Transaction cannot be undone");
+});
+
+it("should not undo a transaction that was already undone", async () => {
+  const transactionsRepository = new InMemoryTransactionsRepository();
+  const deposit = TransactionBuilder.aDeposit().build();
+  deposit.rollback();
+  await transactionsRepository.create(deposit);
+
+  const sut = new UndoTransaction({ transactionsRepository });
+  const input = { transactionId: deposit.id };
+  await expect(sut.execute(input)).rejects.toThrow("Transaction already undone");
 });

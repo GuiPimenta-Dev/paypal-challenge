@@ -36,6 +36,7 @@ export class Deposit extends RollbackableTransaction {
   }
 
   rollback() {
+    this.markRollbackAsDone();
     return new RollbackDeposit({ payeeId: this.payeeId, value: -this.value });
   }
 }

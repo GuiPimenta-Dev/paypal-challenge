@@ -19,6 +19,7 @@ export class UndoTransaction {
     const transaction = await this.transactionsRepository.findById(transactionId);
     if (!transaction) throw new NotFound("Transaction not found");
     if (!(transaction instanceof RollbackableTransaction)) throw new BadRequest("Transaction cannot be undone");
+    if (transaction.isRollbackDone()) throw new BadRequest("Transaction already undone");
     const rollback = transaction.rollback();
     await this.transactionsRepository.create(rollback);
     return { transactionId: rollback.id };

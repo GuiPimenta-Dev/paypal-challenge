@@ -39,6 +39,7 @@ export class Transfer extends RollbackableTransaction {
   }
 
   rollback() {
+    this.markRollbackAsDone();
     return new RollbackTransfer({ payerId: this.payeeId, payeeId: this.payerId, value: this.value });
   }
 }
