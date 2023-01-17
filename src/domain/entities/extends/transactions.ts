@@ -1,3 +1,5 @@
+import { BadRequest } from "../../../utils/http/bad-request";
+
 export class Transaction {
   id: string;
   value: number;
@@ -7,14 +9,11 @@ export class Transaction {
 }
 
 export abstract class RollbackableTransaction extends Transaction {
-  private rollbackAlreadyDone = false;
+  private wasRollbackDone = false;
 
   markRollbackAsDone() {
-    this.rollbackAlreadyDone = true;
-  }
-
-  isRollbackDone() {
-    return this.rollbackAlreadyDone;
+    if (this.wasRollbackDone) throw new BadRequest("Rollback already done");
+    this.wasRollbackDone = true;
   }
 
   abstract rollback(): Transaction;

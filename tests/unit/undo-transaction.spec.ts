@@ -55,5 +55,5 @@ it("should not undo a transaction that was already undone", async () => {
 
   const sut = new UndoTransaction({ transactionsRepository });
   const input = { transactionId: deposit.id };
-  await expect(sut.execute(input)).rejects.toThrow("Transaction already undone");
+  await expect(sut.execute(input)).rejects.toThrow("Rollback already done");
 });
