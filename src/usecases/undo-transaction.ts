@@ -8,7 +8,7 @@ interface Dependencies {
 }
 
 export class UndoTransaction {
-  private transactionsRepository: TransactionsRepository;
+  private readonly transactionsRepository: TransactionsRepository;
 
   constructor(input: Dependencies) {
     Object.assign(this, input);

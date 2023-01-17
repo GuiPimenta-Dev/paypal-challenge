@@ -12,6 +12,10 @@ export class InMemoryTransactionsRepository implements TransactionsRepository {
     return this.transactions.find((transaction) => transaction.id === id);
   }
 
+  async listByUserId(userId: string): Promise<Transaction[]> {
+    return this.transactions.filter((transaction) => transaction.payerId === userId || transaction.payeeId === userId);
+  }
+
   async calculateBalance(userId: string): Promise<number> {
     const transactions = this.transactions.filter(
       (transaction) => transaction.payerId === userId || transaction.payeeId === userId,
