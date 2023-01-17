@@ -8,7 +8,7 @@
     --data '{
         "name": "JohnDoe",
         "password": "123456",
-        "email": "john_doe@gmassaisl.aacsom",
+        "email": "john_doe@gmail.com",
         "cpf": "12345678910"
     }'
 
@@ -43,3 +43,8 @@
 
     curl --request GET \
     --url http://localhost:3000/transactions/${userId}
+
+# Executing the server
+
+    $ docker build . -t server
+    $ docker run -p 3000:3000 server
