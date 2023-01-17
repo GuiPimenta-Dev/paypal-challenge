@@ -64,3 +64,18 @@ it("Should be able to undo a transaction", async () => {
   expect(sut.statusCode).toBe(200);
   expect(sut.body).toHaveProperty("transactionId");
 });
+
+it("should be able to list all transactions", async () => {
+  const user = UserBuilder.aUser().build();
+  await config.usersRepository.create(user);
+  const deposit = TransactionBuilder.aDeposit().of(100).to(user.id).build();
+  const rollback = deposit.rollback();
+  await config.transactionsRepository.create(deposit);
+  await config.transactionsRepository.create(rollback);
+
+  const sut = await request(app).get(`/transactions/${user.id}`).send({ userId: user.id });
+
+  expect(sut.statusCode).toBe(200);
+  expect(sut.body.transactions).toEqual([deposit, rollback]);
+  expect(sut.body.balance).toBe(0);
+});
