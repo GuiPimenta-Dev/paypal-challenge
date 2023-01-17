@@ -1,5 +1,5 @@
-import { RollbackableTransaction, Transaction } from "./extends/transactions";
-
+import { RollbackStrategy } from "./extends/rollback-strategy";
+import { Transaction } from "./extends/transaction";
 import { v4 as uuid } from "uuid";
 
 interface Input {
@@ -22,7 +22,7 @@ class RollbackTransfer extends Transaction {
   }
 }
 
-export class Transfer extends RollbackableTransaction {
+export class Transfer extends RollbackStrategy {
   id: string;
   value: number;
   payerId: string;
