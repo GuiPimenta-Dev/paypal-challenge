@@ -15,8 +15,8 @@ class RollbackDeposit extends Transaction {
 
   constructor(props: Input) {
     super();
-    Object.assign(this, props);
     this.id = uuid();
+    Object.assign(this, props);
   }
 }
 
