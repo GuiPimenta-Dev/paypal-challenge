@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "test:watch": "jest --watchAll",
     "start": "nodemon",
     "debug": "tsnd --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts",
