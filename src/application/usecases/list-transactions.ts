@@ -1,5 +1,5 @@
-import { NotFound } from "../utils/http/not-found";
-import { Transaction } from "../domain/entities/extends/transaction";
+import { NotFound } from "../../utils/http-status/not-found";
+import { Transaction } from "../../domain/entities/extends/transaction";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { UsersRepository } from "../ports/repositories/users";
 

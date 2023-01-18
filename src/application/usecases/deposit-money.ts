@@ -1,5 +1,5 @@
-import { Deposit } from "../domain/entities/deposit";
-import { NotFound } from "../utils/http/not-found";
+import { Deposit } from "../../domain/entities/deposit";
+import { NotFound } from "../../utils/http-status/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
 import { UsersRepository } from "../ports/repositories/users";
 

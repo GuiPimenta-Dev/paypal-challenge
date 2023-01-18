@@ -1,11 +1,11 @@
 import { AuthorizerProvider } from "../ports/providers/authorizer";
-import { BadRequest } from "../utils/http/bad-request";
+import { BadRequest } from "../../utils/http-status/bad-request";
 import { Broker } from "../ports/broker/broker";
-import { NotFound } from "../utils/http/not-found";
+import { NotFound } from "../../utils/http-status/not-found";
 import { TransactionsRepository } from "../ports/repositories/transactions";
-import { Transfer } from "../domain/entities/transfer";
-import { TransferMadeEvent } from "../domain/events/transfer-made";
-import { UserCategory } from "../domain/entities/user";
+import { Transfer } from "../../domain/entities/transfer";
+import { TransferMadeEvent } from "../../domain/events/transfer-made";
+import { UserCategory } from "../../domain/entities/user";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {

@@ -1,6 +1,6 @@
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { TransactionBuilder } from "../utils/builder/transaction";
-import { UndoTransaction } from "../../src/usecases/undo-transaction";
+import { UndoTransaction } from "../../src/application/usecases/undo-transaction";
 import { UserBuilder } from "../utils/builder/user";
 
 it("should be able to undo a deposit transaction", async () => {

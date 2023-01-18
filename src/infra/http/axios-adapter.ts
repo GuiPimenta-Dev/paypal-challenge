@@ -1,6 +1,6 @@
-import { HttpClient } from "../../ports/http/http-client";
-import { HttpError } from "../../utils/http/extends/http-error";
-import { HttpOutput } from "../../ports/http/http-output";
+import { HttpClient } from "../../application/ports/http/http-client";
+import { HttpError } from "../../utils/http-status/extends/http-error";
+import { HttpOutput } from "../../application/ports/http/http-output";
 import axios from "axios";
 
 export class AxiosAdapter implements HttpClient {

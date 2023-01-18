@@ -1,4 +1,4 @@
-import { DepositMoney } from "../../src/usecases/deposit-money";
+import { DepositMoney } from "../../src/application/usecases/deposit-money";
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
 import { UserBuilder } from "../utils/builder/user";

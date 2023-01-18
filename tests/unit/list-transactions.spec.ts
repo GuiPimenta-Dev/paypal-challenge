@@ -1,6 +1,6 @@
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
-import { ListTransactions } from "../../src/usecases/list-transactions";
+import { ListTransactions } from "../../src/application/usecases/list-transactions";
 import { TransactionBuilder } from "../utils/builder/transaction";
 import { UserBuilder } from "../utils/builder/user";
 

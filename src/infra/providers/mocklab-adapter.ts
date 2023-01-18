@@ -1,5 +1,5 @@
-import { EmailProvider } from "../../ports/providers/email";
-import { HttpClient } from "../../ports/http/http-client";
+import { EmailProvider } from "../../application/ports/providers/email";
+import { HttpClient } from "../../application/ports/http/http-client";
 
 export class MockLabAdapter implements EmailProvider {
   constructor(private httpClient: HttpClient) {}

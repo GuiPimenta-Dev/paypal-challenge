@@ -1,9 +1,9 @@
-import { DepositMoney } from "../../usecases/deposit-money";
-import { HttpInput } from "../../ports/http/http-input";
-import { ListTransactions } from "../../usecases/list-transactions";
-import { Success } from "../../utils/http/success";
-import { TransferMoney } from "../../usecases/transfer-money";
-import { UndoTransaction } from "../../usecases/undo-transaction";
+import { DepositMoney } from "../usecases/deposit-money";
+import { HttpInput } from "../ports/http/http-input";
+import { ListTransactions } from "../usecases/list-transactions";
+import { Success } from "../../utils/http-status/success";
+import { TransferMoney } from "../usecases/transfer-money";
+import { UndoTransaction } from "../usecases/undo-transaction";
 import { config } from "../../config";
 
 export class TransactionController {

@@ -1,4 +1,4 @@
-import { BadRequest } from "../../../utils/http/bad-request";
+import { BadRequest } from "../../../utils/http-status/bad-request";
 import { NonRollbackableTransaction } from "./non-rollbackable-transaction";
 import { Transaction } from "./transaction";
 

@@ -1,5 +1,5 @@
-import { AuthorizerProvider } from "../../ports/providers/authorizer";
-import { HttpClient } from "../../ports/http/http-client";
+import { AuthorizerProvider } from "../../application/ports/providers/authorizer";
+import { HttpClient } from "../../application/ports/http/http-client";
 
 export class MockyAdapter implements AuthorizerProvider {
   constructor(private httpClient: HttpClient) {}

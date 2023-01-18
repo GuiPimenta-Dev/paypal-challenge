@@ -3,7 +3,7 @@ import { InMemoryBroker } from "../../src/infra/broker/in-memory";
 import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
 import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
 import { TransactionBuilder } from "../utils/builder/transaction";
-import { TransferMoney } from "../../src/usecases/transfer-money";
+import { TransferMoney } from "../../src/application/usecases/transfer-money";
 import { UserBuilder } from "../utils/builder/user";
 
 let usersRepository: InMemoryUsersRepository;

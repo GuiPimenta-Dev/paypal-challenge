@@ -1,6 +1,6 @@
-import { User, UserCategory } from "../domain/entities/user";
+import { User, UserCategory } from "../../domain/entities/user";
 
-import { BadRequest } from "../utils/http/bad-request";
+import { BadRequest } from "../../utils/http-status/bad-request";
 import { UsersRepository } from "../ports/repositories/users";
 
 interface Dependencies {

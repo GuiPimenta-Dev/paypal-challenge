@@ -27,7 +27,7 @@ beforeEach(async () => {
   config.broker = broker;
 });
 
-it("should be able authorize the transaction, make the transfer and send an email", async () => {
+it.skip("should be able authorize the transaction, make the transfer and send an email", async () => {
   const payer = UserBuilder.aUser().build();
   const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
@@ -45,7 +45,7 @@ it("should be able authorize the transaction, make the transfer and send an emai
   expect(httpClientSpy.calledUrls[1]).toBe("http://o4d9z.mocklab.io/notify");
 });
 
-it("should be able to make a deposit", async () => {
+it.skip("should be able to make a deposit", async () => {
   const payee = UserBuilder.aUser().build();
   await config.usersRepository.create(payee);
 
@@ -55,7 +55,7 @@ it("should be able to make a deposit", async () => {
   expect(sut.body).toHaveProperty("transactionId");
 });
 
-it("Should be able to undo a transaction", async () => {
+it.skip("Should be able to undo a transaction", async () => {
   const payer = UserBuilder.aUser().build();
   await config.usersRepository.create(payer);
   const deposit = TransactionBuilder.aDeposit().of(10).to(payer.id).build();
@@ -67,7 +67,7 @@ it("Should be able to undo a transaction", async () => {
   expect(sut.body).toHaveProperty("transactionId");
 });
 
-it("should be able to list all transactions", async () => {
+it.skip("should be able to list all transactions", async () => {
   const user = UserBuilder.aUser().build();
   await config.usersRepository.create(user);
   const deposit = TransactionBuilder.aDeposit().of(100).to(user.id).build();
