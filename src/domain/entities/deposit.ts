@@ -1,5 +1,5 @@
-import { RollbackStrategy } from "./extends/rollback-strategy";
-import { Transaction } from "./extends/transaction";
+import { NonRollbackableTransaction } from "./extends/non-rollbackable-transaction";
+import { RollbackableTransaction } from "./extends/rollbackable-transaction";
 import { v4 as uuid } from "uuid";
 
 interface Input {
@@ -7,20 +7,21 @@ interface Input {
   value: number;
 }
 
-class RollbackDeposit extends Transaction {
+class RollbackDeposit extends NonRollbackableTransaction {
   id: string;
   value: number;
   payeeId: string;
+  sourceId: string;
   type = "rollback-deposit";
 
-  constructor(props: Input) {
+  constructor(props: Input & { sourceId: string }) {
     super();
     this.id = uuid();
     Object.assign(this, props);
   }
 }
 
-export class Deposit extends RollbackStrategy {
+export class Deposit extends RollbackableTransaction {
   id: string;
   value: number;
   payeeId: string;
@@ -35,8 +36,8 @@ export class Deposit extends RollbackStrategy {
     return new Deposit({ id: uuid(), ...input });
   }
 
-  rollback() {
+  createRollback() {
     this.markRollbackAsDone();
-    return new RollbackDeposit({ payeeId: this.payeeId, value: -this.value });
+    return new RollbackDeposit({ payeeId: this.payeeId, value: -this.value, sourceId: this.id });
   }
 }

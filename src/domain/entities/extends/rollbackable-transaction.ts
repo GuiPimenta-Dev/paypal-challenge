@@ -1,7 +1,8 @@
 import { BadRequest } from "../../../utils/http/bad-request";
+import { NonRollbackableTransaction } from "./non-rollbackable-transaction";
 import { Transaction } from "./transaction";
 
-export abstract class RollbackStrategy extends Transaction {
+export abstract class RollbackableTransaction extends Transaction {
   private wasRollbackDone = false;
 
   markRollbackAsDone() {
@@ -9,5 +10,5 @@ export abstract class RollbackStrategy extends Transaction {
     this.wasRollbackDone = true;
   }
 
-  abstract rollback(): Transaction;
+  abstract createRollback(): NonRollbackableTransaction;
 }

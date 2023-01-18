@@ -1,15 +1,15 @@
-import { AxiosAdapter } from "../../src/infra/http/axios-adapter";
-import { HttpClientSpy } from "../utils/mocks/http-client-spy";
-import { InMemoryBroker } from "../../src/infra/broker/in-memory";
-import { InMemoryTransactionsRepository } from "../../src/infra/repositories/in-memory/transactions";
-import { InMemoryUsersRepository } from "../../src/infra/repositories/in-memory/users";
-import { MockLabAdapter } from "../../src/infra/providers/mocklab-adapter";
-import { MockyAdapter } from "../../src/infra/providers/mocky-adapter";
-import { TransactionBuilder } from "../utils/builder/transaction";
-import { TransferMadeHandler } from "../../src/application/handlers/transfer-made";
-import { UserBuilder } from "../utils/builder/user";
-import { app } from "../../src/router";
-import { config } from "../../src/config";
+import { AxiosAdapter } from "../../../src/infra/http/axios-adapter";
+import { HttpClientSpy } from "./http-client-spy";
+import { InMemoryBroker } from "../../../src/infra/broker/in-memory";
+import { InMemoryTransactionsRepository } from "../../../src/infra/repositories/in-memory/transactions";
+import { InMemoryUsersRepository } from "../../../src/infra/repositories/in-memory/users";
+import { MockLabAdapter } from "../../../src/infra/providers/mocklab-adapter";
+import { MockyAdapter } from "../../../src/infra/providers/mocky-adapter";
+import { TransactionBuilder } from "../builder/transaction";
+import { TransferMadeHandler } from "../../../src/application/handlers/transfer-made";
+import { UserBuilder } from "../builder/user";
+import { app } from "../../../src/router";
+import { config } from "../../../src/config";
 import request from "supertest";
 
 let httpClientSpy: HttpClientSpy;

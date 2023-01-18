@@ -12,8 +12,8 @@ it("should be able to list all transactions from a user", async () => {
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().of(100).to(payer.id).build();
   const transfer = TransactionBuilder.aTransfer().of(50).from(payer.id).to(payee.id).build();
-  const rollbackTransfer = transfer.rollback();
-  const rollbackDeposit = deposit.rollback();
+  const rollbackTransfer = transfer.createRollback();
+  const rollbackDeposit = deposit.createRollback();
   await transactionsRepository.create(deposit);
   await transactionsRepository.create(transfer);
   await transactionsRepository.create(rollbackTransfer);

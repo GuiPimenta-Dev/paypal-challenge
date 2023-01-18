@@ -1,5 +1,5 @@
-import { RollbackStrategy } from "./extends/rollback-strategy";
-import { Transaction } from "./extends/transaction";
+import { NonRollbackableTransaction } from "./extends/non-rollbackable-transaction";
+import { RollbackableTransaction } from "./extends/rollbackable-transaction";
 import { v4 as uuid } from "uuid";
 
 interface Input {
@@ -8,21 +8,22 @@ interface Input {
   value: number;
 }
 
-class RollbackTransfer extends Transaction {
+class RollbackTransfer extends NonRollbackableTransaction {
   id: string;
   value: number;
   payerId: string;
   payeeId: string;
+  sourceId: string;
   type = "rollback-transfer";
 
-  constructor(props: Input) {
+  constructor(props: Input & { sourceId: string }) {
     super();
     this.id = uuid();
     Object.assign(this, props);
   }
 }
 
-export class Transfer extends RollbackStrategy {
+export class Transfer extends RollbackableTransaction {
   id: string;
   value: number;
   payerId: string;
@@ -38,8 +39,8 @@ export class Transfer extends RollbackStrategy {
     return new Transfer({ id: uuid(), ...input });
   }
 
-  rollback() {
+  createRollback() {
     this.markRollbackAsDone();
-    return new RollbackTransfer({ payerId: this.payeeId, payeeId: this.payerId, value: this.value });
+    return new RollbackTransfer({ payerId: this.payeeId, payeeId: this.payerId, value: this.value, sourceId: this.id });
   }
 }

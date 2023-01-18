@@ -39,7 +39,7 @@ it("should be able to undo a transfer transaction", async () => {
 it("should not be able to undo a non rollbackable transaction", async () => {
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().build();
-  const rollback = deposit.rollback();
+  const rollback = deposit.createRollback();
   await transactionsRepository.create(rollback);
 
   const sut = new UndoTransaction({ transactionsRepository });
@@ -50,7 +50,7 @@ it("should not be able to undo a non rollbackable transaction", async () => {
 it("should not undo a transaction that was already undone", async () => {
   const transactionsRepository = new InMemoryTransactionsRepository();
   const deposit = TransactionBuilder.aDeposit().build();
-  deposit.rollback();
+  deposit.createRollback();
   await transactionsRepository.create(deposit);
 
   const sut = new UndoTransaction({ transactionsRepository });
