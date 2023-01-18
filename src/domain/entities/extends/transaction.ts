@@ -1,4 +1,4 @@
-export class Transaction {
+export abstract class Transaction {
   id: string;
   value: number;
   payerId?: string;
